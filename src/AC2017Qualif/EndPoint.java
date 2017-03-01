@@ -10,5 +10,12 @@ public class EndPoint {
 	
 	public ArrayList<Server> ServerList;
 	public ArrayList<Integer> Latency4ServerList;
+	public EndPoint(int lD, int k, ArrayList<Server> serverList, ArrayList<Integer> latency4ServerList) {
+		super();
+		LD = lD;
+		K = k;
+		ServerList = serverList;
+		Latency4ServerList = latency4ServerList;
+	}
 	
 }
