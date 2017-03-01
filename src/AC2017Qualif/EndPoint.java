@@ -10,7 +10,7 @@ public class EndPoint implements Comparable<EndPoint>{
 	public final int epID;
 	public final int LD;//the latency of serving a video request from the data center to this endpoint, in milliseconds
 	public final int K;//the number of cache servers that this endpoint is connected to
-	public ArrayList<Server> ServerList;// removed
+	public ArrayList<Server> ServerList; // list of all servers
 	public final ArrayList<Integer> Latency4ServerList;// Latency to all servers. Put  Integer.MAX_VALUE for server not connected
 	public Map<Integer,Request> RequestList;// List of requests, mapped by index of video !!! Need concatenate if 2 requests are from same Endpoint with same video
 	

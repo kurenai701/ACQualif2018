@@ -52,20 +52,35 @@ public class ReadInput {
 				int k = scIn.nextInt();
 				
 				// Initialize latencyToServer with IntegerMax for all cache
+				ArrayList<Server> serverList = new ArrayList<Server>();
 				ArrayList<Integer> latencyToServerList = new ArrayList<Integer>();
-				for (int cache = 0; cache < pb.C; cache++)
+				for (int cache_id = 0; cache_id < pb.C; cache_id++)
 				{
 					latencyToServerList.add(Integer.MAX_VALUE);
+					Server s = new Server(cache_id, new ArrayList<EndPoint>());
+					serverList.add(s);
 				}			
 								
+				ArrayList<Integer> serverToUpdateWithEndpoint = new ArrayList<Integer>();
+				
 				for (int j = 0; j < k; j++)
 				{
 					int c = scIn.nextInt();
 					int lc = scIn.nextInt();
+					
+					serverToUpdateWithEndpoint.add(c);
 					latencyToServerList.set(c, lc);
 				}
 				
-				EndPoint endp = new EndPoint(i, ld, k, latencyToServerList,ServerList);
+				EndPoint endp = new EndPoint(i, ld, k, latencyToServerList, serverList);
+				
+				// Now that the endpoint is created, add endpoint to servers connected.
+				for (Integer c: serverToUpdateWithEndpoint)
+				{
+					Server server = serverList.get(c);
+					server.ServedEndPoint.add(endp);
+				}
+				
 				pb.EndPointList.add(endp);
 			}
 			

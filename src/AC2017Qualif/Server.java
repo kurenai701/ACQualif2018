@@ -15,12 +15,12 @@ public class Server {
 	
 	
 	
-	public Server(int servID, ArrayList<EndPoint> servedEndPoint,  int sizeUsed) {
+	public Server(int servID, ArrayList<EndPoint> servedEndPoint) {
 		super();
 		this.servID = servID;
 		ServedEndPoint = servedEndPoint;
 		VideosCached =  Collections.synchronizedSortedSet(new TreeSet<Integer>());
-		this.sizeUsed = sizeUsed;
+		this.sizeUsed = 0;
 		
 		VideosPriority = new PriorityBlockingQueue<>();
 		

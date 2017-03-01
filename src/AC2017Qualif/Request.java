@@ -37,9 +37,7 @@ public class Request {
 			}
 		}
 		
+		// TODO : update scores of servers and affected endpoints
 	}
-	
-	
-	
-	
+
 }
