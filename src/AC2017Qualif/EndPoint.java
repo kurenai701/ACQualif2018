@@ -9,7 +9,8 @@ public class EndPoint {
 	public int K;//the number of cache servers that this endpoint is connected to
 	
 	public ArrayList<Server> ServerList;
-	public ArrayList<Integer> Latency4ServerList;
+	public ArrayList<Integer> Latency4ServerList;// Latency to all servers. Put Max.Integer for server not connected
+	public ArrayList<Request> RequestList;
 	public EndPoint(int lD, int k, ArrayList<Server> serverList, ArrayList<Integer> latency4ServerList) {
 		super();
 		LD = lD;

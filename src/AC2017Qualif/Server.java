@@ -16,4 +16,29 @@ public class Server {
 	public int sizeUsed;
 	
 	
+	
+	
+	public int EvaluateGainAddingVideo(Video vid)
+	{
+		int resp = 0;
+		// Evaluate Gain by ading the Video vid to this server
+		for(EndPoint ep : ServedEndPoint)
+		{
+			for(Request Rq: ep.RequestList)
+			{
+				if(Rq.Rv == vid.ID)
+				{
+					resp +=Math.max( 0,Rq.curLatency-ep.Latency4ServerList.get(ID))*Rq.Nreq; 
+				}
+			
+			}
+			
+		}
+		return resp;
+		
+		
+	}
+	
+	
+	
 }
