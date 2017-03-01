@@ -1,6 +1,7 @@
 package AC2017Qualif;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 
 /*
@@ -14,14 +15,15 @@ public class Problem implements Serializable {
 	 * 
 	 */
 	
-	// TODO : replace by problem variables + create automatic constructor
-//	public int R; // rows
-	public int C; // columns
-//	public int L; // minimum number of each ingredient cells in a slice
-//	public int H; // maximum total number of cells of a slice
-//	public int Pizza[][];//R C   : -1 for Tomato,   -2 for Mushroom. zero or positive : Id of occupying Cell 
-	
+	public int V;// (1 <= V <= 10000) - the number of videos
+	public int  E;// (1 <= E <= 1000) - the number of endpoints
+	public int R;// (1 <= R <= 1000000) - the number of request descriptions
+	public int C;// (1 <= C <= 1000) - the number of cache servers
+	public int X;// (1 <= X <= 500000) - the capacity of each cache server in megabytes
 
+	public ArrayList<Integer> VideoSize;
+	
+	
 	
 	public Problem(){}
 	
