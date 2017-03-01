@@ -14,10 +14,10 @@ public class EndPoint implements Comparable<EndPoint>{
 	
 	public EndPoint(int epID, int lD, int k, ArrayList<Integer> latency4ServerList) {
 		super();
-		epID = epID;
-		LD = lD;
-		K = k;
-		Latency4ServerList = latency4ServerList;
+		this.epID = epID;
+		this.LD = lD;
+		this.K = k;
+		this.Latency4ServerList = latency4ServerList;
 	}
 
 	@Override

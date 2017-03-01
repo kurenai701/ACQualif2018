@@ -65,7 +65,7 @@ public class ReadInput {
 					latencyToServerList.set(c, lc);
 				}
 				
-				EndPoint endp = new EndPoint(ld, k, latencyToServerList);
+				EndPoint endp = new EndPoint(i, ld, k, latencyToServerList);
 				pb.EndPointList.add(endp);
 			}
 			
@@ -80,7 +80,13 @@ public class ReadInput {
                 int curServer = -1;
                 int curLatency = Integer.MAX_VALUE;
 				
-				Request req = new Request(rv, re, nreq, curServer, curLatency);
+				//Request req = new Request(rv, re, nreq, curServer, curLatency);
+				
+				Video vid = pb.VideoList.get(rv);
+				EndPoint ep = pb.EndPointList.get(re);
+				
+				Request req = new Request(vid, ep, nreq, curServer, curLatency);
+				pb.RequestList.add(req);
 			}
 				
 			
