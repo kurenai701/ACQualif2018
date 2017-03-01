@@ -17,11 +17,12 @@ public class EndPoint implements Comparable<EndPoint>{
 	public EndPoint(int epID, int lD, int k, ArrayList<Integer>  latency4ServerList,ArrayList<Server> ServerList) {
 		super();
 		this.epID = epID;
-		LD = lD;
-		K = k;
-		Latency4ServerList = latency4ServerList;
+
 		this.ServerList=ServerList;
 		this.RequestList = Collections.synchronizedSortedMap(new TreeMap<Integer,Request>());
+		this.LD = lD;
+		this.K = k;
+		this.Latency4ServerList = latency4ServerList;
 	}
 
 	@Override
