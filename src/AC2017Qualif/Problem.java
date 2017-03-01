@@ -28,7 +28,12 @@ public class Problem implements Serializable {
 	
 	
 	
-	public Problem(){}
+	public Problem(){
+		this.VideoList = new ArrayList<Video>();
+		this.EndPointList = new ArrayList<EndPoint>();
+		this.ServerList = new ArrayList<Server>();
+		this.RequestList = new ArrayList<Request>();		
+	}
 	
 
 
