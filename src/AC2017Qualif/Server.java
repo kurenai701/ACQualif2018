@@ -39,8 +39,10 @@ public class Server {
 		{
 			
 			//TODO : to optimize with HashMap
-			for(Request Rq: ep.RequestList)
+			if(ep.RequestList.containsKey(vid.ID))
 			{
+				Request Rq = (ep.RequestList.get(vid.ID));
+			
 				if(Rq.V.ID == vid.ID)
 				{
 					resp +=Math.max( 0,Rq.curLatency-ep.Latency4ServerList.get(servID))*Rq.Nreq; 

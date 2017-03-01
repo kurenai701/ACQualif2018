@@ -1,23 +1,27 @@
 package AC2017Qualif;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class EndPoint implements Comparable<EndPoint>{
 
-	public int epID;
-	public int LD;//the latency of serving a video request from the data center to this endpoint, in milliseconds
-	public int K;//the number of cache servers that this endpoint is connected to
-	
+	public final int epID;
+	public final int LD;//the latency of serving a video request from the data center to this endpoint, in milliseconds
+	public final int K;//the number of cache servers that this endpoint is connected to
 	public ArrayList<Server> ServerList;// removed
-	public ArrayList<Integer> Latency4ServerList;// Latency to all servers. Put  Integer.MAX_VALUE for server not connected
-	public ArrayList<Request> RequestList;
+	public final ArrayList<Integer> Latency4ServerList;// Latency to all servers. Put  Integer.MAX_VALUE for server not connected
+	public Map<Integer,Request> RequestList;// List of requests, mapped by index of video !!! Need concatenate if 2 requests are from same Endpoint with same video
 	
-	public EndPoint(int epID, int lD, int k, ArrayList<Integer> latency4ServerList) {
+	public EndPoint(int epID, int lD, int k, ArrayList<Integer>  latency4ServerList,ArrayList<Server> ServerList) {
 		super();
-		epID = epID;
+		this.epID = epID;
 		LD = lD;
 		K = k;
 		Latency4ServerList = latency4ServerList;
+		this.ServerList=ServerList;
+		this.RequestList = Collections.synchronizedSortedMap(new TreeMap<Integer,Request>());
 	}
 
 	@Override
