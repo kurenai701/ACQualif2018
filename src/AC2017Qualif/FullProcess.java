@@ -12,10 +12,10 @@ public class FullProcess {
 	public static void main(String[] args) {
 	
 		boolean RELOAD = true;
-	//Common.InputFileName = "example.in";
-	//Common.InputFileName = "small.in";RELOAD = false;
-	//Common.InputFileName = "medium.in";RELOAD = false;//50000!!!   => Best : 50000
-		Common.InputFileName = "big .in";//901183  => Best : 957644
+	//Common.InputFileName = "kittens.in";
+	//Common.InputFileName = "videos_worth_spreading.in";RELOAD = false;
+	//Common.InputFileName = "trending_today.in";RELOAD = false;//
+		Common.InputFileName = "me_at_the_zoo.in";RELOAD = false;
 		
 		Common.InputFilePath = Common.ACFileFolderPath+Common.InputFileName;
 		// PARAMETRES !!
@@ -49,7 +49,9 @@ public class FullProcess {
 			BestSolutionSynchro BestSolSynch = new BestSolutionSynchro(startSol);
 			Alg = new AlgoInputToOutput(pbMod, rand,startSol,BestSolSynch,0,50);
 								
-			sol =  Alg.AlgoComplicatedFromProblem( pbMod,  rand, startSol, 500);
+			sol =  Alg.AlgoInit( pbMod,  rand);
+			
+			
 			ProcessAllBackupOfSolutionToFolder(sol);
 		}else
 		{

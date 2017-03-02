@@ -6,7 +6,7 @@ public class Request {
 	public final Video V ;//the ID of the requested video
 	//public int Re;//the ID of the endpoint from which the requests are coming from
 	public final EndPoint eP;
-	public final int Nreq;//- the number of requests
+	public  int Nreq;//- the number of requests
 	
 	
 	// Updateable

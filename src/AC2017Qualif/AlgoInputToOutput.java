@@ -152,6 +152,65 @@ public class AlgoInputToOutput implements  Runnable {
 	{
 			return sol;
 	}
+	
+	
+	public Solution AlgoInit(Problem pb, SplittableRandom rand)
+	{
+		Solution resp = new Solution(pb);
+		
+		// First, update all server priority list
+		for(Video vid : pb.VideoList)
+		{
+			for(Server s : pb.ServerList)
+			{
+							VideoGain VG = new VideoGain(vid, -1);
+				s.AllVideoGains.add(VG);
+				s.VideosPriority.add(VG);
+				
+			}
+			pb.ServerList.get(0).updateAllServersVG(vid);
+		}
+		
+		// Then, find Best VG accross all servers, put it in cache, and iterate until end
+		int scoreCur = 0;
+		int nit = 0;
+		
+		while(true)
+		{
+			nit++;
+			VideoGain bestVG = null;
+			Server bestServ = null;
+			for(Server s : pb.ServerList)
+			{
+				VideoGain curVG = s.VideosPriority.peek();
+				if(bestVG == null || ( bestVG.Score < curVG.Score  && ( s.sizeUsed + curVG.V.size <= pb.X))  )
+				{
+					bestVG   = s.VideosPriority.peek();
+					bestServ = s;
+					
+				}
+				
+			}
+			
+			
+			if(bestVG==null)
+			{
+				break;
+			}else{
+				scoreCur += bestVG.Score;
+				bestServ.PutVideoInCache(bestVG.V);
+			}
+			if(nit%1==0)
+			{
+				Sys.disp(" it" + nit + " Score : " + scoreCur);
+			}
+		}
+		
+		
+		return resp;
+	}
+
+	
 		
 	
 }

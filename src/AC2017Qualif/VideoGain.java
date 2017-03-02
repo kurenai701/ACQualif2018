@@ -6,12 +6,12 @@ import java.util.TreeSet;
 
 public class VideoGain implements Comparable<VideoGain> {
 	public Video V;
-	public int Score;
+	public long Score;
 	public SortedSet<Request> ServedRequest;
 	
 	
 	
-	public VideoGain(Video v, int score) {
+	public VideoGain(Video v, long score) {
 		super();
 		V = v;
 		Score = score;
@@ -22,7 +22,7 @@ public class VideoGain implements Comparable<VideoGain> {
 
 	@Override
 	public int compareTo(VideoGain o) {
-		int c = Integer.compare(Score,o.Score);
+		int c = Long.compare(Score,o.Score);
 		if(c==0)
 			return Integer.compare(V.ID, o.V.ID);
 		return c;

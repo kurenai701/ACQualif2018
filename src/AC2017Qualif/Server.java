@@ -22,7 +22,7 @@ public class Server {
 		ServedEndPoint = servedEndPoint;
 		VideosCached =  Collections.synchronizedSortedSet(new TreeSet<Integer>());
 		this.sizeUsed = 0;
-		
+		AllVideoGains = new ArrayList<VideoGain>();
 		VideosPriority = new PriorityBlockingQueue<>();
 		this.pb = pb;
 		
@@ -32,9 +32,9 @@ public class Server {
 	
 	
 	
-	public int EvaluateGainAddingVideo(Video vid)
+	public long EvaluateGainAddingVideo(Video vid)
 	{
-		int resp = 0;
+		long resp = 0;
 		// Evaluate Gain by adding the Video vid to this server
 		for(EndPoint ep : ServedEndPoint)
 		{
@@ -61,6 +61,11 @@ public class Server {
 		// Get videoGain
 		VideoGain VG = AllVideoGains.get(vid.ID);
 		
+		
+		// Update size
+		if(VideosCached.contains(vid.ID))
+			sizeUsed = sizeUsed - vid.size;
+		
 		// Remove video from server
 		VideosCached.remove(vid.ID);
 		
@@ -80,7 +85,6 @@ public class Server {
 		
 		
 		
-		
 	}
 	
 
@@ -89,6 +93,15 @@ public class Server {
 	{
 		// Get videoGain
 		VideoGain VG = AllVideoGains.get(vid.ID);
+		
+		// Update size
+		if(!VideosCached.contains(vid.ID))
+			sizeUsed = sizeUsed + vid.size;
+		if(sizeUsed > pb.X)
+		{
+			Sys.disp("ERROR, server overflow");
+			
+		}
 		
 		// Add video to server
 		VideosCached.add(vid.ID);

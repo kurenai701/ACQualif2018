@@ -45,6 +45,13 @@ public class ReadInput {
 				pb.VideoList.add(vid);
 			}
 			
+			pb.ServerList = new ArrayList<Server>();
+			for (int cache_id = 0; cache_id < pb.C; cache_id++)
+			{
+				Server s = new Server(cache_id, new ArrayList<EndPoint>(),pb);
+				pb.ServerList.add(s);
+			}		
+			
 			// ENDPOINTS
 			for (int i=0; i < pb.E; i++)
 			{
@@ -52,13 +59,11 @@ public class ReadInput {
 				int k = scIn.nextInt();
 				
 				// Initialize latencyToServer with IntegerMax for all cache
-				ArrayList<Server> serverList = new ArrayList<Server>();
+				
 				ArrayList<Integer> latencyToServerList = new ArrayList<Integer>();
 				for (int cache_id = 0; cache_id < pb.C; cache_id++)
 				{
 					latencyToServerList.add(Integer.MAX_VALUE);
-					Server s = new Server(cache_id, new ArrayList<EndPoint>(),pb);
-					serverList.add(s);
 				}			
 								
 				ArrayList<Integer> serverToUpdateWithEndpoint = new ArrayList<Integer>();
@@ -72,12 +77,12 @@ public class ReadInput {
 					latencyToServerList.set(c, lc);
 				}
 				
-				EndPoint endp = new EndPoint(i, ld, k, latencyToServerList, serverList);
+				EndPoint endp = new EndPoint(i, ld, k, latencyToServerList, pb.ServerList);
 				
 				// Now that the endpoint is created, add endpoint to servers connected.
 				for (Integer c: serverToUpdateWithEndpoint)
 				{
-					Server server = serverList.get(c);
+					Server server = pb.ServerList.get(c);
 					server.ServedEndPoint.add(endp);
 				}
 				
@@ -85,7 +90,7 @@ public class ReadInput {
 			}
 			
 			// REQUESTS
-			
+			int R2 = 0;
 			for (int i = 0; i < pb.R; i++)
 			{
 				int rv = scIn.nextInt();
@@ -100,9 +105,22 @@ public class ReadInput {
 				Video vid = pb.VideoList.get(rv);
 				EndPoint ep = pb.EndPointList.get(re);
 				
-				Request req = new Request(vid, ep, nreq, curServer, curLatency);
-				pb.RequestList.add(req);
+				Request req;
+				if(ep.RequestList.containsKey(vid.ID))
+				{
+					req = ep.RequestList.get(vid.ID);
+					req.Nreq += nreq;
+					
+				}else
+				{
+					req = new Request(vid, ep, nreq, curServer, curLatency);
+					pb.RequestList.add(req);
+					ep.RequestList.put(vid.ID, req);
+					R2++;
+				}
+				
 			}
+			pb.R = R2;
 				
 			
 		Sys.pln("input read done : pb created");
