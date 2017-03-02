@@ -7,15 +7,16 @@ import java.util.TreeSet;
 import java.util.concurrent.PriorityBlockingQueue;
 
 public class Server {
+	public Problem pb; 
 	public int servID;
-	public ArrayList<EndPoint> ServedEndPoint;
+	public ArrayList<EndPoint> ServedEndPoint;// All EndPoint served
 	public SortedSet<Integer> VideosCached;
 	PriorityBlockingQueue<VideoGain> VideosPriority;// contains the videos not yet in server sorted by potential gains
 	ArrayList<VideoGain> AllVideoGains;// contains the gain of videos, indexed by video IDs. Used to update VideosPriority;
 	
 	
 	
-	public Server(int servID, ArrayList<EndPoint> servedEndPoint) {
+	public Server(int servID, ArrayList<EndPoint> servedEndPoint, Problem pb) {
 		super();
 		this.servID = servID;
 		ServedEndPoint = servedEndPoint;
@@ -23,7 +24,7 @@ public class Server {
 		this.sizeUsed = 0;
 		
 		VideosPriority = new PriorityBlockingQueue<>();
-		
+		this.pb = pb;
 		
 	}
 	public int sizeUsed;
@@ -38,7 +39,6 @@ public class Server {
 		for(EndPoint ep : ServedEndPoint)
 		{
 			
-			//TODO : to optimize with HashMap
 			if(ep.RequestList.containsKey(vid.ID))
 			{
 				Request Rq = (ep.RequestList.get(vid.ID));
@@ -56,7 +56,7 @@ public class Server {
 	
 	
 	// Removes video from server. Does nothing if video not present
-	public void RemoveVideo(Video vid)
+	public void RemoveVideoFromCache(Video vid)
 	{
 		// Get videoGain
 		VideoGain VG = AllVideoGains.get(vid.ID);
@@ -71,17 +71,76 @@ public class Server {
 			Rq.UpdateStat();
 			
 		}
-		// Clear affected Request
-		VG.ServedRequest = Collections.synchronizedSortedSet(new TreeSet<Request>());;
+		// Clear affected Request List
+				VG.ServedRequest = Collections.synchronizedSortedSet(new TreeSet<Request>());;
+				
+		// Update all VG scores for video
+		 updateAllServersVG( vid);
 		
-		
-		// compute gain  
-		VG.Score = EvaluateGainAddingVideo(vid);
 		
 		
 		
 		
 	}
+	
+
+	// Put video in server. 
+	public void PutVideoInCache(Video vid)
+	{
+		// Get videoGain
+		VideoGain VG = AllVideoGains.get(vid.ID);
+		
+		// Add video to server
+		VideosCached.add(vid.ID);
+		
+		
+		// Update affected RequestList
+		VG.ServedRequest = Collections.synchronizedSortedSet(new TreeSet<Request>());;
+		for(EndPoint ep : ServedEndPoint)
+		{
+			if(ep.RequestList.containsKey(vid.ID))
+			{
+				Request Rq = (ep.RequestList.get(vid.ID));
+			
+				if(Rq.V.ID == vid.ID)
+				{
+					VG.ServedRequest.add(Rq);
+				}
+			
+			}
+			
+		}
+		
+		// Remove from priority queue
+		VideosPriority.remove(VG);
+		
+
+		// Update all VG scores for video
+		 updateAllServersVG( vid);
+
+	}
+	
+	
+	public void updateAllServersVG(Video vid)
+	{
+		// Update Video Gain Score on all Servers (including this one)
+		for(Server s : pb.ServerList )
+		{
+			if(!s.VideosCached.contains(vid.ID))
+			{		
+				VideoGain VG2 = s.AllVideoGains.get(vid.ID);
+				// compute gain and update priority list
+				s.VideosPriority.remove(VG2);
+				VG2.Score = s.EvaluateGainAddingVideo(vid);
+				s.VideosPriority.put(VG2);
+				
+				
+			}
+			
+		}
+	}
+	
+	
 	
 	
 }

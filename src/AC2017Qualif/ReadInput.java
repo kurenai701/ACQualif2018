@@ -57,7 +57,7 @@ public class ReadInput {
 				for (int cache_id = 0; cache_id < pb.C; cache_id++)
 				{
 					latencyToServerList.add(Integer.MAX_VALUE);
-					Server s = new Server(cache_id, new ArrayList<EndPoint>());
+					Server s = new Server(cache_id, new ArrayList<EndPoint>(),pb);
 					serverList.add(s);
 				}			
 								

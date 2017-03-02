@@ -26,6 +26,7 @@ public class Request {
 	public void UpdateStat()
 	{
 		// Updates the request : Recomputes current Latency and current server
+		
 		curLatency = eP.LD;
 		this.curServer = -1;
 		for(Server s : eP.ServerList)
@@ -36,8 +37,8 @@ public class Request {
 				this.curLatency = eP.Latency4ServerList.get(s.servID);
 			}
 		}
+				
 		
-		// TODO : update scores of servers and affected endpoints
 	}
 
 }
