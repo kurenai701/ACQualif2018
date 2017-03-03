@@ -2,6 +2,7 @@ package AC2017Qualif;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /*
@@ -25,6 +26,7 @@ public class Problem implements Serializable {
 	public ArrayList<Video>   VideoList;
 	public ArrayList<Server>  ServerList;
 	public ArrayList<Request> RequestList;
+	public HashMap<Integer, ArrayList<Request>>  RequestForVideo;
 	
 	
 	
@@ -32,7 +34,8 @@ public class Problem implements Serializable {
 		this.VideoList = new ArrayList<Video>();
 		this.EndPointList = new ArrayList<EndPoint>();
 		this.ServerList = new ArrayList<Server>();
-		this.RequestList = new ArrayList<Request>();		
+		this.RequestList = new ArrayList<Request>();
+		this.RequestForVideo = new HashMap<>();
 	}
 	
 

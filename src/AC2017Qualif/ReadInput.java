@@ -43,6 +43,7 @@ public class ReadInput {
 				int size = scIn.nextInt();
 			    Video vid = new Video(i, size);
 				pb.VideoList.add(vid);
+				pb.RequestForVideo.put(vid.ID, new ArrayList<Request>());
 			}
 			
 			pb.ServerList = new ArrayList<Server>();
@@ -119,9 +120,15 @@ public class ReadInput {
 					R2++;
 				}
 				
+				
+				
 			}
 			pb.R = R2;
-				
+			for(Request rq : pb.RequestList)
+			{
+				pb.RequestForVideo.get( rq.V.ID   ).add(rq);
+			}
+			
 			
 		Sys.pln("input read done : pb created");
 		}

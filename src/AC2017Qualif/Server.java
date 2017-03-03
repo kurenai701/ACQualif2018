@@ -36,8 +36,9 @@ public class Server {
 	{
 		long resp = 0;
 		// Evaluate Gain by adding the Video vid to this server
-		for(EndPoint ep : ServedEndPoint)
+		for(Request rq : pb.RequestForVideo.get(vid.ID))// Nendpoint iteration.  Could be optimized by using only the Endpoints with request for this video
 		{
+			EndPoint ep = rq.eP;
 			
 			if(ep.RequestList.containsKey(vid.ID))
 			{

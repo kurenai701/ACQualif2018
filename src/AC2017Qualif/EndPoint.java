@@ -1,9 +1,8 @@
 package AC2017Qualif;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class EndPoint implements Comparable<EndPoint>{
 
@@ -19,7 +18,7 @@ public class EndPoint implements Comparable<EndPoint>{
 		this.epID = epID;
 
 		this.ServerList=ServerList;
-		this.RequestList = Collections.synchronizedSortedMap(new TreeMap<Integer,Request>());
+		this.RequestList = new HashMap<Integer,Request>();
 		this.LD = lD;
 		this.K = k;
 		this.Latency4ServerList = latency4ServerList;

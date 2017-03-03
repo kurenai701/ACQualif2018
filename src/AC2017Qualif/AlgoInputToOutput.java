@@ -157,7 +157,7 @@ public class AlgoInputToOutput implements  Runnable {
 	public Solution AlgoInit(Problem pb, SplittableRandom rand)
 	{
 		Solution resp = new Solution(pb);
-		
+		int cntvid = 0;
 		// First, update all server priority list
 		for(Video vid : pb.VideoList)
 		{
@@ -169,10 +169,15 @@ public class AlgoInputToOutput implements  Runnable {
 				
 			}
 			pb.ServerList.get(0).updateAllServersVG(vid);
+			cntvid++;
+			if(cntvid%100==0)
+			{
+				Sys.disp("vid add : " + vid.ID);
+			}
 		}
 		
 		// Then, find Best VG accross all servers, put it in cache, and iterate until end
-		int scoreCur = 0;
+		long scoreCur = 0;
 		int nit = 0;
 		
 		while(true)
