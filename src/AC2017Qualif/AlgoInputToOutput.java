@@ -177,7 +177,7 @@ public class AlgoInputToOutput implements  Runnable {
 		}
 		
 		// Then, find Best VG accross all servers, put it in cache, and iterate until end
-		long scoreCur = 0;
+		double scoreCur = 0;
 		int nit = 0;
 		
 		while(true)
@@ -197,17 +197,19 @@ public class AlgoInputToOutput implements  Runnable {
 				
 			}
 			
-			
+			double scoreCor = 0.0;
 			if(bestVG==null)
 			{
 				break;
 			}else{
-				scoreCur += bestVG.Score;
+				scoreCor=(bestVG.Score)*1000.0/pb.SR;
+				scoreCur += scoreCor;
 				bestServ.PutVideoInCache(bestVG.V);
 			}
 			if(nit%1==0)
 			{
-				Sys.disp(" it" + nit +"score inc :" + bestVG.Score+ " Score : " + scoreCur);
+				Sys.disp(" put video :" + bestVG.V.ID + " in server:" + bestServ.servID ) ;
+				Sys.disp(" it " + nit +" score inc :" + scoreCor+ " Score : " + Math.floor(scoreCur));
 			}
 		}
 		

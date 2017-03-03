@@ -22,6 +22,8 @@ public class Problem implements Serializable {
 	public int C;// (1 <= C <= 1000) - the number of cache servers
 	public int X;// (1 <= X <= 500000) - the capacity of each cache server in megabytes
 
+	public double SR;// Total number of requested Videos
+	
 	public ArrayList<EndPoint> EndPointList;
 	public ArrayList<Video>   VideoList;
 	public ArrayList<Server>  ServerList;
@@ -36,6 +38,7 @@ public class Problem implements Serializable {
 		this.ServerList = new ArrayList<Server>();
 		this.RequestList = new ArrayList<Request>();
 		this.RequestForVideo = new HashMap<>();
+		SR = 0.0;
 	}
 	
 

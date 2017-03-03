@@ -109,19 +109,16 @@ public class Server {
 		
 		
 		// Update affected RequestList
-		VG.ServedRequest = Collections.synchronizedSortedSet(new TreeSet<Request>());;
-		for(EndPoint ep : ServedEndPoint)
+		for(Request Rq : pb.RequestForVideo.get(vid.ID))// Nendpoint iteration.  Could be optimized by using only the Endpoints with request for this video
 		{
-			if(ep.RequestList.containsKey(vid.ID))
-			{
-				Request Rq = (ep.RequestList.get(vid.ID));
 			
-				if(Rq.V.ID == vid.ID)
-				{
-					VG.ServedRequest.add(Rq);
-				}
+//				if(Rq.V.ID == vid.ID)
+//				{
+//					VG.ServedRequest.add(Rq);  // TODO : add at creation
+//				}
 			
-			}
+//			}
+			Rq.curLatency = Math.min( Rq.eP.LD, Rq.eP.Latency4ServerList.get(servID));
 			
 		}
 		

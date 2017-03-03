@@ -97,7 +97,7 @@ public class ReadInput {
 				int rv = scIn.nextInt();
 				int re = scIn.nextInt();
 				int nreq = scIn.nextInt();
-				
+				pb.SR += nreq;
                 int curServer = -1;
                 long curLatency = pb.EndPointList.get(re).LD;
 				
