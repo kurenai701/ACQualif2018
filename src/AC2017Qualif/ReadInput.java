@@ -60,10 +60,10 @@ public class ReadInput {
 				
 				// Initialize latencyToServer with IntegerMax for all cache
 				
-				ArrayList<Integer> latencyToServerList = new ArrayList<Integer>();
+				ArrayList<Long> latencyToServerList = new ArrayList<Long>();
 				for (int cache_id = 0; cache_id < pb.C; cache_id++)
 				{
-					latencyToServerList.add(Integer.MAX_VALUE);
+					latencyToServerList.add(10000000000L);// Latency 1e10 for not used servers
 				}			
 								
 				ArrayList<Integer> serverToUpdateWithEndpoint = new ArrayList<Integer>();
@@ -71,7 +71,7 @@ public class ReadInput {
 				for (int j = 0; j < k; j++)
 				{
 					int c = scIn.nextInt();
-					int lc = scIn.nextInt();
+					long lc = scIn.nextLong();
 					
 					serverToUpdateWithEndpoint.add(c);
 					latencyToServerList.set(c, lc);
@@ -98,7 +98,7 @@ public class ReadInput {
 				int nreq = scIn.nextInt();
 				
                 int curServer = -1;
-                int curLatency = Integer.MAX_VALUE;
+                long curLatency = pb.EndPointList.get(re).LD;
 				
 				//Request req = new Request(rv, re, nreq, curServer, curLatency);
 				
@@ -113,7 +113,7 @@ public class ReadInput {
 					
 				}else
 				{
-					req = new Request(vid, ep, nreq, curServer, curLatency);
+					req = new Request(vid, ep, nreq, curServer, curLatency,R2);
 					pb.RequestList.add(req);
 					ep.RequestList.put(vid.ID, req);
 					R2++;

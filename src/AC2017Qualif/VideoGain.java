@@ -22,9 +22,9 @@ public class VideoGain implements Comparable<VideoGain> {
 
 	@Override
 	public int compareTo(VideoGain o) {
-		int c = Long.compare(Score,o.Score);
+		int c = Long.compare(o.Score,Score);
 		if(c==0)
-			return Integer.compare(V.ID, o.V.ID);
+			return Integer.compare(o.V.ID,V.ID);
 		return c;
 		
 	}

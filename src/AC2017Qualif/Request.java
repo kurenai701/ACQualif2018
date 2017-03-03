@@ -1,25 +1,26 @@
 package AC2017Qualif;
 
-public class Request {
+public class Request implements Comparable<Request>{
 
-	
+	public final  int ReqID;
 	public final Video V ;//the ID of the requested video
 	//public int Re;//the ID of the endpoint from which the requests are coming from
 	public final EndPoint eP;
-	public  int Nreq;//- the number of requests
+	public  long Nreq;//- the number of requests
 	
 	
 	// Updateable
 	public int curServer;// Current server providing the service. -1 for global
-	public int curLatency;// current latency for request
+	public long curLatency;// current latency for request
 	
-	public Request(Video v, EndPoint eP, int nreq, int curServer, int curLatency) {
+	public Request(Video v, EndPoint eP, long nreq, int curServer, long curLatency, int ReqID) {
 		super();
 		this.eP = eP;
 		this.V = v;
 		Nreq = nreq;
 		this.curServer = curServer;
 		this.curLatency = curLatency;
+		this.ReqID= ReqID;
 	}
 
 	
@@ -39,6 +40,13 @@ public class Request {
 		}
 				
 		
+	}
+
+
+	@Override
+	public int compareTo(Request o) {
+		// TODO Auto-generated method stub
+		return Integer.compare(ReqID, o.ReqID);
 	}
 
 }

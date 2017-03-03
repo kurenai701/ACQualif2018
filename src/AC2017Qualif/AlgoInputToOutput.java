@@ -163,7 +163,7 @@ public class AlgoInputToOutput implements  Runnable {
 		{
 			for(Server s : pb.ServerList)
 			{
-							VideoGain VG = new VideoGain(vid, -1);
+				VideoGain VG = new VideoGain(vid, -1);
 				s.AllVideoGains.add(VG);
 				s.VideosPriority.add(VG);
 				
@@ -183,7 +183,7 @@ public class AlgoInputToOutput implements  Runnable {
 			for(Server s : pb.ServerList)
 			{
 				VideoGain curVG = s.VideosPriority.peek();
-				if(bestVG == null || ( bestVG.Score < curVG.Score  && ( s.sizeUsed + curVG.V.size <= pb.X))  )
+				if((bestVG == null ||  bestVG.Score < curVG.Score)  && ( s.sizeUsed + curVG.V.size <= pb.X)  ) // TODO : add look into tree for best score that fits, and log size
 				{
 					bestVG   = s.VideosPriority.peek();
 					bestServ = s;
@@ -202,7 +202,7 @@ public class AlgoInputToOutput implements  Runnable {
 			}
 			if(nit%1==0)
 			{
-				Sys.disp(" it" + nit + " Score : " + scoreCur);
+				Sys.disp(" it" + nit +"score inc :" + bestVG.Score+ " Score : " + scoreCur);
 			}
 		}
 		
