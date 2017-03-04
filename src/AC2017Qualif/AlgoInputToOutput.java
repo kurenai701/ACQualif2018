@@ -1,6 +1,5 @@
 package AC2017Qualif;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.SplittableRandom;
 
@@ -46,13 +45,18 @@ public class AlgoInputToOutput implements  Runnable {
 		
 		
 		
-		// Todo : create sub problems
+		// TODO : create sub problems
 		ArrayList<Problem> SubProblems = new ArrayList<Problem>();
-		ArrayList<Point> StartPos = new ArrayList<Point>();
 		double bestScore = Sol.GetScore();
 		double firstScore = bestScore;
 		double firstTime = System.currentTimeMillis();
 		int currentBestNum = BestSolSynchro.getNumSol();
+		
+		
+		
+		//*************
+		SubProblems.add(pb);// Currently, no divide and conquer
+		
 		
 		
 		for( int nit = 0;nit<NIT;nit++)
@@ -63,7 +67,7 @@ public class AlgoInputToOutput implements  Runnable {
 
 		
 		
-		for(int subInd = 0; subInd<StartPos.size();subInd++)
+		for(int subInd = 0; subInd<SubProblems.size();subInd++)
 		{
 			Problem subProb = SubProblems.get(subInd);
 
@@ -117,9 +121,9 @@ public class AlgoInputToOutput implements  Runnable {
 	// Return a subProblem 
 	public Problem subProblem( Problem pb)
 	{
-			//TOdo :create sub problem
+			//TODO :create sub problem
 		
-		Problem subP = new Problem( );
+		Problem subP = pb;
 		return subP;
 		
 	}
@@ -128,16 +132,107 @@ public class AlgoInputToOutput implements  Runnable {
 	public Solution ResolveSubProblem( Problem subProb, Solution Sol,  SplittableRandom rand)
 	{
 
-		Solution subSol = new Solution(subProb);
-		
+		//Solution subSol = new Solution(subProb);
+		Sol.curScore = -100;
 		
 		// Resolve subProblem
+		double scoreCur = 0.0;
+		
+		
+		// Select NServersOpt servers
+		int NServersOpt = 5;
+		ArrayList<Server> servOptimized = new ArrayList<>();
+		for(int i = 0;i<NServersOpt;i++)
+		{
+			servOptimized.add(subProb.ServerList.get( rand.nextInt(subProb.ServerList.size())   ));
+		}
+		
+		
+		int NITERATIONS = 20;
+		int NVIDEOREMOVEDPERSERVER = 30;
+		
+		for(int niteration = 0;niteration< NITERATIONS;niteration++)
+		{
+			
+			// Remove videos from servers at random
+			for(Server s :servOptimized )
+			{
+				
+				Integer[]  Vidlist = s.VideosCached.toArray(new Integer[s.VideosCached.size()]);
+				if(Vidlist.length>0)
+				{
+					for(int nvr=0;nvr<NVIDEOREMOVEDPERSERVER;nvr++)
+					{
+						s.RemoveVideoFromCache( subProb.VideoList.get( Vidlist[rand.nextInt(Vidlist.length)]));
+					}
+				}
+			}
+			
+			
+			// Put back best videos
+			int nit = 0;
+			
+			while(true)
+			{
+				nit++;
+				
+				double scoreInc = FillWithBestVideoGains( servOptimized, subProb);
+				
+				scoreCur += scoreInc;
+				if(scoreInc == 0)
+					break;
+
+			}
+		
+			
+		}
+		
+		
 		
 		
 		return Sol;
 	}
 	
+	//select best videogains from in servers, and add it to cache. Returns Score change
+	private double FillWithBestVideoGains( ArrayList<Server>  CurServerList, Problem pb)
+	{
+		double scoreChange = 0.0;
+		VideoGain bestVG = null;
+		Server bestServ = null;
+		for(Server s : CurServerList)
+		{
+			//VideoGain curVG = s.VideosPriority.peek();
+			VideoGain curVG = s.ReturnBestCandidateVideo();
+			if( (curVG!=null) && (bestVG == null ||  bestVG.Score < curVG.Score)    ) // TODO : add look into tree for best score that fits, and log size
+			{
+				bestVG   = curVG;
+				bestServ = s;
+				
+			}
+			
+		}
 		
+		
+		if(bestVG==null)
+		{
+			return scoreChange;
+		}else{
+			scoreChange=(bestVG.Score * (bestVG.V.size+pb.smallOffset))*1000.0/ pb.SR;
+			bestServ.PutVideoInCache(bestVG.V);
+		}
+
+//		if(nit%10==0)
+//		{
+//			Sys.disp(" put video :" + bestVG.V.ID + " in server:" + bestServ.servID ) ;
+//			Sys.disp(" it " + nit +" score inc :" + scoreCor+ " Score : " + Math.floor(scoreCur));
+//		}
+		
+		
+		return scoreChange;
+		
+	}
+	
+	
 	
 	public Solution AlgoComplicatedFromProblem(Problem pb, SplittableRandom rand,Solution startSol, int NIT)
 	{
@@ -153,7 +248,7 @@ public class AlgoInputToOutput implements  Runnable {
 			return sol;
 	}
 	
-	
+	// Algorithm used to find initial best solution
 	public Solution AlgoInit(Problem pb, SplittableRandom rand)
 	{
 		Solution resp = new Solution(pb);
@@ -183,35 +278,13 @@ public class AlgoInputToOutput implements  Runnable {
 		while(true)
 		{
 			nit++;
-			VideoGain bestVG = null;
-			Server bestServ = null;
-			for(Server s : pb.ServerList)
-			{
-				//VideoGain curVG = s.VideosPriority.peek();
-				VideoGain curVG = s.ReturnBestCandidateVideo();
-				if( (curVG!=null) && (bestVG == null ||  bestVG.Score < curVG.Score)    ) // TODO : add look into tree for best score that fits, and log size
-				{
-					bestVG   = curVG;
-					bestServ = s;
-					
-				}
-				
-			}
 			
-			double scoreCor = 0.0;
-			if(bestVG==null)
-			{
+			double scoreInc = FillWithBestVideoGains( pb.ServerList, pb);
+			
+			scoreCur += scoreInc;
+			if(scoreInc == 0)
 				break;
-			}else{
-				scoreCor=(bestVG.Score * (bestVG.V.size+pb.smallOffset))*1000.0/ pb.SR;
-				scoreCur += scoreCor;
-				bestServ.PutVideoInCache(bestVG.V);
-			}
-			if(nit%10==0)
-			{
-				Sys.disp(" put video :" + bestVG.V.ID + " in server:" + bestServ.servID ) ;
-				Sys.disp(" it " + nit +" score inc :" + scoreCor+ " Score : " + Math.floor(scoreCur));
-			}
+
 		}
 		
 		

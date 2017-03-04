@@ -1,12 +1,17 @@
 package AC2017Qualif;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class Server {
+public class Server implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6788409562011863866L;
 	public Problem pb; 
 	public int servID;
 	//public ArrayList<EndPoint> ServedEndPoint;// All EndPoint served
@@ -61,8 +66,6 @@ public class Server {
 		{
 			EndPoint ep = rq.eP;
 			
-//			if(ep.RequestList.containsKey(vid.ID))
-//			{
 				Request Rq = (ep.RequestList.get(vid.ID));
 			
 				if(Rq.V.ID == vid.ID)
@@ -70,8 +73,6 @@ public class Server {
 					double inc = Math.max( 0.0, Rq.curLatency-ep.Latency4ServerList.get(servID))*Rq.Nreq;
 					resp +=inc/(vid.size+Problem.smallOffset); 
 				}
-			
-//			}
 			
 		}
 		return resp;
@@ -91,17 +92,21 @@ public class Server {
 		
 		// Remove video from server
 		VideosCached.remove(vid.ID);
-		//TODO
-		// Update affected requests
-		for( Request Rq : VG.ServedRequest  )
+		
+		// Update affected RequestList
+		for(Request Rq : pb.RequestForVideo.get(vid.ID))// Nendpoint iteration.  Could be optimized by using only the Endpoints with request for this video
 		{
 			// Update Request
-			Rq.UpdateStat();
+			Rq.UpdateStat(pb);
 			
 		}
-		// Clear affected Request List
-				VG.ServedRequest = Collections.synchronizedSortedSet(new TreeSet<Request>());;
-				
+					
+		// Add to priority queue
+			VideosPriority.add(VG);
+		//Update pointer. Put it at start of priority queue (since we removed a video, high probability that another one will fit.
+			StartPosForSmaller = VideosPriority.first();
+			
+			
 		// Update all VG scores for video
 		 updateAllServersVG( vid);
 		

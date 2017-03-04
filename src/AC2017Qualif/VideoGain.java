@@ -1,10 +1,15 @@
 package AC2017Qualif;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class VideoGain implements Comparable<VideoGain> {
+public class VideoGain implements Comparable<VideoGain>, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4663119527379423380L;
 	public Video V;
 	public double Score;
 	public SortedSet<Request> ServedRequest;

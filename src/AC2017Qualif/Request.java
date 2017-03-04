@@ -1,7 +1,13 @@
 package AC2017Qualif;
 
-public class Request implements Comparable<Request>{
+import java.io.Serializable;
 
+public class Request implements Comparable<Request> , Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9142164069308619146L;
 	public final  int ReqID;
 	public final Video V ;//the ID of the requested video
 	//public int Re;//the ID of the endpoint from which the requests are coming from
@@ -24,15 +30,15 @@ public class Request implements Comparable<Request>{
 	}
 
 	
-	public void UpdateStat()
+	public void UpdateStat(Problem pb)
 	{
 		// Updates the request : Recomputes current Latency and current server
 		
 		curLatency = eP.LD;
 		this.curServer = -1;
-		for(Server s : eP.ServerList)
+		for(Server s : pb.ServerList)
 		{
-			if(eP.Latency4ServerList.get(s.servID) <  eP.LD && s.VideosCached.contains(V.ID)  )
+			if(eP.Latency4ServerList.get(s.servID) <  curLatency && s.VideosCached.contains(V.ID)  )
 			{
 				this.curServer  = s.servID;
 				this.curLatency = eP.Latency4ServerList.get(s.servID);

@@ -15,7 +15,7 @@ public class Problem implements Serializable {
 	/**
 	 * 
 	 */
-	final static double smallOffset = 1e-3;
+	static double smallOffset = 30;//Parameters to give a small boost to smaller videos
 	public int V;// (1 <= V <= 10000) - the number of videos
 	public int E;// (1 <= E <= 1000) - the number of endpoints
 	public int R;// (1 <= R <= 1000000) - the number of request descriptions
