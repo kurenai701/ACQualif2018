@@ -2,7 +2,6 @@ package AC2017Qualif;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.function.Predicate;
 
 public class GenerateOutput implements Serializable{
@@ -56,7 +55,7 @@ public class GenerateOutput implements Serializable{
 			buildLine = buildLine.trim();
 
 			writer.println(buildLine);
-			Sys.disp(buildLine);
+		//	Sys.disp(buildLine);
 		}
 		
 //		//  !!!!!!!!!!!!!!!!!!! //					

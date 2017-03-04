@@ -36,19 +36,19 @@ public class OutputBackToSol {
 			
 			// Getting rid of the first line
 			String line1 = scOut.nextLine();
-			Sys.disp("line1 : " + line1);
+	//		Sys.disp("line1 : " + line1);
 			
 			for (int i = 0; i < pb.C; i++) {
 				String line = scOut.nextLine();
-				Sys.disp(line);
+//				Sys.disp(line);
 				String[] splitline = line.split(" ");
 	
 				int idServer = Integer.parseInt(splitline[0]);
-				Sys.disp("idServer" + idServer);
+	//			Sys.disp("idServer" + idServer);
 				Server curServer = pb.ServerList.get(idServer);
 				for (int j = 1; j < splitline.length; j++) {
 					int idVid = Integer.parseInt(splitline[j]);
-					Sys.disp("idVid" + idVid);
+//					Sys.disp("idVid" + idVid);
 					Video curVid = pb.VideoList.get(idVid);
                     
 					
@@ -64,7 +64,7 @@ public class OutputBackToSol {
 			{
 				pb.ServerList.get(0).updateAllServersVG(vid);
 				cntvid++;
-				if(cntvid%100==0)
+				if(cntvid%1000==0)
 				{
 					Sys.disp("vid add : " + vid.ID);
 				}

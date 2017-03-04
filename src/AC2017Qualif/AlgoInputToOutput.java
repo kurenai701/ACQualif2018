@@ -60,7 +60,7 @@ public class AlgoInputToOutput implements  Runnable {
 		//*************
 		
 		SubProblems.add(pb);// Currently, no divide and conquer
-		double pRestart = 0.1;
+		double pRestart = 0.3;
 		
 		for( int nit = 0;nit<NIT;nit++)
 		{
@@ -155,7 +155,11 @@ public class AlgoInputToOutput implements  Runnable {
 		
 		
 		// Select 'NServersOpt' servers to optimize
-		int NServersOpt = 5;  // 1????
+		int NServersOpt = 2;  // 1????
+		int NITERATIONS = 1;//3
+		int NVIDEOREMOVEDPERSERVER = 100;//20;
+		int Ntabu = rand.nextInt(15);//Tabu list length
+		
 		ArrayList<Server> servOptimized = new ArrayList<>();
 		for(int i = 0;i<NServersOpt;i++)
 		{
@@ -163,9 +167,12 @@ public class AlgoInputToOutput implements  Runnable {
 		}
 		
 		
-		int NITERATIONS = 5;//100;
-		int NVIDEOREMOVEDPERSERVER = 50;//20;
+		
 
+		
+		LinkedList<Integer> TabuList = new LinkedList<>();
+		
+		
 		for(int niteration = 0;niteration< NITERATIONS;niteration++)
 		{
 			
@@ -184,8 +191,7 @@ public class AlgoInputToOutput implements  Runnable {
 			}
 			
 			
-			LinkedList<Integer> TabuList = new LinkedList<>();
-			int Ntabu = 6;//Tavu list length
+
 			
 			// Put back best videos
 			int nit = 0;

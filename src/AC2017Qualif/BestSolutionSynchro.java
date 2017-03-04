@@ -48,7 +48,7 @@ public class BestSolutionSynchro {
 			
 			BestSol = tmp;
 			
-			if((curTime-this.lastSave) > 10*1000)//30*1000)// Was a limit to a save to disk every 30 sec
+			if((curTime-this.lastSave) > 30*1000)//30*1000)// Was a limit to a save to disk every 30 sec
 			{
 				// Sol.SaveSolutionAsRaw("_BestSolutionInProcess.ser");
 				FullProcess.ProcessAllBackupOfSolutionToFolder(Sol);
