@@ -187,10 +187,11 @@ public class AlgoInputToOutput implements  Runnable {
 			Server bestServ = null;
 			for(Server s : pb.ServerList)
 			{
-				VideoGain curVG = s.VideosPriority.peek();
-				if((bestVG == null ||  bestVG.Score < curVG.Score)  && ( s.sizeUsed + curVG.V.size <= pb.X)  ) // TODO : add look into tree for best score that fits, and log size
+				//VideoGain curVG = s.VideosPriority.peek();
+				VideoGain curVG = s.ReturnBestCandidateVideo();
+				if( (curVG!=null) && (bestVG == null ||  bestVG.Score < curVG.Score)    ) // TODO : add look into tree for best score that fits, and log size
 				{
-					bestVG   = s.VideosPriority.peek();
+					bestVG   = curVG;
 					bestServ = s;
 					
 				}
