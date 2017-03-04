@@ -32,9 +32,9 @@ public class Server {
 	
 	
 	
-	public long EvaluateGainAddingVideo(Video vid)
+	public double EvaluateGainAddingVideo(Video vid)
 	{
-		long resp = 0;
+		double resp = 0;
 		// Evaluate Gain by adding the Video vid to this server
 		for(Request rq : pb.RequestForVideo.get(vid.ID))// Nendpoint iteration.  Could be optimized by using only the Endpoints with request for this video
 		{
@@ -46,7 +46,8 @@ public class Server {
 			
 				if(Rq.V.ID == vid.ID)
 				{
-					resp +=Math.max( 0,Rq.curLatency-ep.Latency4ServerList.get(servID))*Rq.Nreq; 
+					double inc = Math.max( 0.0, Rq.curLatency-ep.Latency4ServerList.get(servID))*Rq.Nreq;
+					resp +=inc/(vid.size+1e-6); 
 				}
 			
 			}

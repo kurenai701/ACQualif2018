@@ -163,7 +163,7 @@ public class AlgoInputToOutput implements  Runnable {
 		{
 			for(Server s : pb.ServerList)
 			{
-				VideoGain VG = new VideoGain(vid, -1);
+				VideoGain VG = new VideoGain(vid, -1.0);
 				s.AllVideoGains.add(VG);
 				s.VideosPriority.add(VG);
 				
@@ -202,11 +202,11 @@ public class AlgoInputToOutput implements  Runnable {
 			{
 				break;
 			}else{
-				scoreCor=(bestVG.Score)*1000.0/pb.SR;
+				scoreCor=(bestVG.Score * (bestVG.V.size+1e-6))*1000.0/pb.SR;
 				scoreCur += scoreCor;
 				bestServ.PutVideoInCache(bestVG.V);
 			}
-			if(nit%1==0)
+			if(nit%10==0)
 			{
 				Sys.disp(" put video :" + bestVG.V.ID + " in server:" + bestServ.servID ) ;
 				Sys.disp(" it " + nit +" score inc :" + scoreCor+ " Score : " + Math.floor(scoreCur));
