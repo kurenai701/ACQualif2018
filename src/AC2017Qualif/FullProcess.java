@@ -53,7 +53,7 @@ public class FullProcess {
 			sol =  Alg.AlgoInit( pbMod,  rand);
 			
 			
-			return;//TODO
+			//return;//TODO
 			
 			//ProcessAllBackupOfSolutionToFolder(sol);
 		}else
@@ -75,7 +75,7 @@ public class FullProcess {
 		int NIT = 5;
 		
 		// ******************* Parallel Threads ********************
-		int NPROC = 10;
+		int NPROC = 1;
 		
 		Thread[] thL = new Thread[NPROC];
 		for(int i =0;i<NPROC;i++)

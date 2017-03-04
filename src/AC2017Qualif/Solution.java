@@ -86,6 +86,10 @@ public class Solution implements Serializable, Cloneable {
 			{
 				Sys.disp("Error, curLatency of Endpoint not valid!!!");
 			}
+			
+			
+			
+			
 			tempscore += (LD-LC)*req.Nreq*1000.0/pb.SR;
 			
 		}
@@ -100,8 +104,8 @@ public class Solution implements Serializable, Cloneable {
 	
 	public double GetScore()
 	{
-//		if(curScore>-100)
-//			return curScore;
+		if(curScore>-100)
+			return curScore;
 		
 		ScoreInfo scoringInfo = this.GetScoreModel();
 		curScore = scoringInfo.score;
