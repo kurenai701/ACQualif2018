@@ -21,10 +21,9 @@ public class OutputBackToSol {
 		{
 			for(Server s : pb.ServerList)
 			{
-				VideoGain VG = new VideoGain(vid, -1.0);
+				VideoGain VG = new VideoGain(vid.ID, -1.0);
 				s.AllVideoGains.add(VG);
 				s.VideosPriority.add(VG);
-				
 			}			
 		}
 		/////////////////////////

@@ -13,30 +13,23 @@ public class FullProcess {
 	public static void main(String[] args) {
 
 		boolean RELOAD = true;
-		// Common.InputFileName = "kittens.in";Problem.smallOffset = 100;RELOAD
-		// = false;//100=> 1024782; 70 => 1024619 50 => 1024364 0 => 1021680
-		// Common.OutputGeneratedFileName = "kittens.out.txt";
-		// Common.InputFileName =
-		// "videos_worth_spreading.in";Problem.smallOffset = 20;RELOAD =
-		// false;//20 => 608442
-		// Common.OutputGeneratedFileName = "videos_worth_spreading.out.txt";
-		// Common.InputFileName = "trending_today.in";Problem.smallOffset =
-		// 20;RELOAD = false;//20 => 499984
-		// Common.OutputGeneratedFileName = "trending_today.out.txt";
-
+		// Common.InputFileName = "kittens.in";
+		// Problem.smallOffset = 100; //100=> 1024782; 70 => 1024619 50 => 1024364 0 => 1021680
+		// Common.InputFileName = "videos_worth_spreading.in"; 
+		// Problem.smallOffset = 20; //20 => 608442
+		// Common.InputFileName = "trending_today.in";
+		// Problem.smallOffset = 20; //20 => 499984
 		Common.InputFileName = "me_at_the_zoo.in";
-		Problem.smallOffset = 10;
-		RELOAD = false;// 10 => 507906
-		Common.OutputGeneratedFileName = "me_at_the_zoo.out.txt";
+		Problem.smallOffset = 10; // 10 => 507906
+		
+		// Common.InputFileName = "example.in";
 
-		// Common.InputFileName = "example.in";RELOAD = false;
-
+		RELOAD = true;
+		Common.OutputGeneratedFileName = Common.InputFileName + ".out.txt";
 		Common.InputFilePath = Common.ACFileFolderPath + Common.InputFileName;
 		Common.OutputGeneratedFullPath = Common.ACFileFolderPath + Common.OutputGeneratedFileName;
 
 		// PARAMETRES !!
-
-		RELOAD = true;
 
 		//// Initialization of our Tool Classes
 		AlgoInputToOutput Alg = null;// new AlgoInputToOutput();
@@ -91,9 +84,7 @@ public class FullProcess {
 		// ****** Solution Improver ATTENTION AUX PARAMETRES;
 		BestSolutionSynchro BestSolSynch = new BestSolutionSynchro(sol);
 		while (true) {
-			int NIT = 5;
-
-			// ******************* Parallel Threads ********************
+			int NIT = 50;
 			int NPROC = 1;
 
 			Thread[] thL = new Thread[NPROC];
