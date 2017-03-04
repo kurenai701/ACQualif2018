@@ -16,16 +16,15 @@ public class Solution implements Serializable, Cloneable {
 	// for concours : list of ballons and movements
 
 	double curScore; // current score
-	int MAXid;
 	// TODO : Put solution HERE ****************************************
-		//ArrayList<Cell> Cells;
+	// Solution is stored in problem
+		Problem pb;	
 					
 	//************************************************************
 	
 	
 		
-	// problem
-	transient Problem pb;
+
 	
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
@@ -49,17 +48,13 @@ public class Solution implements Serializable, Cloneable {
 	public Solution(Problem pb) {
 		super();
 		this.pb = pb;	
-	
-		this.curScore = 0;
-		//this.Cells = new ArrayList<Cell>();  <= TODO
-		this.MAXid = 0;
 		this.curScore = -1000;
 	}
 	
 	
 	@Override
 	public String toString() {
-		return "Solution [curScore=" + curScore + ", MAXid=" + MAXid + "]";// + ", Cells=" + Cells + "]";
+		return "Solution [curScore=" + curScore +"]";// + ", Cells=" + Cells + "]";
 	}
 
 
@@ -71,23 +66,42 @@ public class Solution implements Serializable, Cloneable {
 	private ScoreInfo GetScoreModel()
 	{
 
-		
-		double score = 0;
 		// *******************************
-		// ** TODO : code score here	**
+		// ** Currently, hardcore version, recompute everything	**
 		//********************************
+		double tempscore = 0;
+		for(Request req :pb.RequestList)
+		{
+			double LD = req.eP.LD;
+			double LC = LD;
+			for(Server s : pb.ServerList)
+			{
+				if(s.VideosCached.contains(req.V.ID))
+				{
+					LC = Math.min(LC, req.eP.Latency4ServerList.get(s.servID));
+				}
+			}
+			
+			if(LC!=req.curLatency)
+			{
+				Sys.disp("Error, curLatency of Endpoint not valid!!!");
+			}
+			tempscore += (LD-LC)*req.Nreq*1000.0/pb.SR;
+			
+		}
+		
 		
 		
 		//*******************************
 		
-		ScoreInfo scoringInfo = new ScoreInfo(score);
+		ScoreInfo scoringInfo = new ScoreInfo(tempscore);
 		return scoringInfo;
 	}
 	
 	public double GetScore()
 	{
-		if(curScore>-100)
-			return curScore;
+//		if(curScore>-100)
+//			return curScore;
 		
 		ScoreInfo scoringInfo = this.GetScoreModel();
 		curScore = scoringInfo.score;

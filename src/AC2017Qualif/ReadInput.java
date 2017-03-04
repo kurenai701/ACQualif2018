@@ -49,7 +49,7 @@ public class ReadInput {
 			pb.ServerList = new ArrayList<Server>();
 			for (int cache_id = 0; cache_id < pb.C; cache_id++)
 			{
-				Server s = new Server(cache_id, new ArrayList<EndPoint>(),pb);
+				Server s = new Server(cache_id, pb);//ew ArrayList<EndPoint>(),
 				pb.ServerList.add(s);
 			}		
 			
@@ -84,7 +84,7 @@ public class ReadInput {
 				for (Integer c: serverToUpdateWithEndpoint)
 				{
 					Server server = pb.ServerList.get(c);
-					server.ServedEndPoint.add(endp);
+	//				server.ServedEndPoint.add(endp);
 				}
 				
 				pb.EndPointList.add(endp);

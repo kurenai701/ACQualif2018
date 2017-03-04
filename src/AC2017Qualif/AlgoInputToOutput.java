@@ -212,7 +212,7 @@ public class AlgoInputToOutput implements  Runnable {
 				Sys.disp(" it " + nit +" score inc :" + scoreCor+ " Score : " + Math.floor(scoreCur));
 			}
 		}
-		
+		Sys.disp("Recomputed score : " + resp.GetScore());
 		
 		return resp;
 	}

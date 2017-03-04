@@ -9,17 +9,17 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class Server {
 	public Problem pb; 
 	public int servID;
-	public ArrayList<EndPoint> ServedEndPoint;// All EndPoint served
+	//public ArrayList<EndPoint> ServedEndPoint;// All EndPoint served
 	public SortedSet<Integer> VideosCached;
 	PriorityBlockingQueue<VideoGain> VideosPriority;// contains the videos not yet in server sorted by potential gains
 	ArrayList<VideoGain> AllVideoGains;// contains the gain of videos, indexed by video IDs. Used to update VideosPriority;
 	
 	
 	
-	public Server(int servID, ArrayList<EndPoint> servedEndPoint, Problem pb) {
+	public Server(int servID, Problem pb) {//, ArrayList<EndPoint> servedEndPoint
 		super();
 		this.servID = servID;
-		ServedEndPoint = servedEndPoint;
+//		ServedEndPoint = servedEndPoint;
 		VideosCached =  Collections.synchronizedSortedSet(new TreeSet<Integer>());
 		this.sizeUsed = 0;
 		AllVideoGains = new ArrayList<VideoGain>();
@@ -70,7 +70,7 @@ public class Server {
 		
 		// Remove video from server
 		VideosCached.remove(vid.ID);
-		
+		//TODO
 		// Update affected requests
 		for( Request Rq : VG.ServedRequest  )
 		{
@@ -113,13 +113,7 @@ public class Server {
 		for(Request Rq : pb.RequestForVideo.get(vid.ID))// Nendpoint iteration.  Could be optimized by using only the Endpoints with request for this video
 		{
 			
-//				if(Rq.V.ID == vid.ID)
-//				{
-//					VG.ServedRequest.add(Rq);  // TODO : add at creation
-//				}
-			
-//			}
-			Rq.curLatency = Math.min( Rq.eP.LD, Rq.eP.Latency4ServerList.get(servID));
+			Rq.curLatency = Math.min( Math.min(Rq.eP.LD,Rq.curLatency ), Rq.eP.Latency4ServerList.get(servID));
 			
 		}
 		
