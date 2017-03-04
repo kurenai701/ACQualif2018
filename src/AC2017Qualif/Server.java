@@ -47,7 +47,8 @@ public class Server implements Serializable {
 			Set<VideoGain> K = VideosPriority.tailSet(StartPosForSmaller) ;
 			for( VideoGain  curVG :K )
 			{
-				if( curVG.V.size +sizeUsed <= pb.X  )
+				
+				if( pb.VideoList.get(curVG.VID).size +sizeUsed <= pb.X  )
 					return curVG;
 				
 				StartPosForSmaller = curVG;
@@ -66,13 +67,13 @@ public class Server implements Serializable {
 		{
 			EndPoint ep = rq.eP;
 			
-				Request Rq = (ep.RequestList.get(vid.ID));
-			
-				if(Rq.V.ID == vid.ID)
-				{
-					double inc = Math.max( 0.0, Rq.curLatency-ep.Latency4ServerList.get(servID))*Rq.Nreq;
+//				Request Rq = (ep.RequestList.get(vid.ID));
+//			
+//				if(Rq.V.ID == vid.ID)
+//				{
+					double inc = Math.max( 0.0, rq.curLatency-ep.Latency4ServerList.get(servID))*rq.Nreq;
 					resp +=inc/(vid.size+Problem.smallOffset); 
-				}
+//				}
 			
 		}
 		return resp;
@@ -162,20 +163,28 @@ public class Server implements Serializable {
 			{		
 				VideoGain VG2 = s.AllVideoGains.get(vid.ID);
 				// compute gain and update priority list
-				s.VideosPriority.remove(VG2);
-				VG2.Score = s.EvaluateGainAddingVideo(vid);
-				s.VideosPriority.add(VG2);
 				
-				
-				// Update lookPointer for small enough Video
-				if(  VG2.compareTo(s.StartPosForSmaller)==0  )
-					s.StartPosForSmaller = s.VideosPriority.first();
-				
-				if(  VG2.compareTo(s.StartPosForSmaller)<0  )
+				double newscore = s.EvaluateGainAddingVideo(vid);
+				if(newscore != VG2.Score)
 				{
-					if(VG2.V.size + s.sizeUsed <= pb.X)
-						s.StartPosForSmaller = VG2;
+					s.VideosPriority.remove(VG2);
+					VG2.Score = newscore;
+					s.VideosPriority.add(VG2);
+					
+					// Update lookPointer for small enough Video
+					if(  VG2.compareTo(s.StartPosForSmaller)<0  )
+					{
+						if( pb.VideoList.get(VG2.VID).size + s.sizeUsed <= pb.X)
+							s.StartPosForSmaller = VG2;
+					}else if(  VG2.compareTo(s.StartPosForSmaller)==0  )
+						s.StartPosForSmaller = s.VideosPriority.first();
+					
 				}
+				
+				
+				
+				
+				
 				
 			}
 			

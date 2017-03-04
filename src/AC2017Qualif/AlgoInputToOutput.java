@@ -1,6 +1,7 @@
 package AC2017Qualif;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.SplittableRandom;
 
 
@@ -47,18 +48,19 @@ public class AlgoInputToOutput implements  Runnable {
 		
 		// TODO : create sub problems
 		ArrayList<Problem> SubProblems = new ArrayList<Problem>();
-		Solution bestSol = Common.DeepCopy(Sol);
+	//	Solution bestSol = Common.DeepCopy(Sol);
 		double bestScore = Sol.GetScore();
 		double firstScore = bestScore;
 		double firstTime = System.currentTimeMillis();
+		
 		int currentBestNum = BestSolSynchro.getNumSol();
 		
 		
 		
 		//*************
+		
 		SubProblems.add(pb);// Currently, no divide and conquer
-		
-		
+		double pRestart = 0.1;
 		
 		for( int nit = 0;nit<NIT;nit++)
 		{
@@ -66,46 +68,51 @@ public class AlgoInputToOutput implements  Runnable {
 		
 		//******************************************************************************
 
+	
 		
-		
-		for(int subInd = 0; subInd<SubProblems.size();subInd++)
-		{
-			Problem subProb = SubProblems.get(subInd);
-
-			Sol= ResolveSubProblem(subProb,Sol,rand);
-		 
-			
-			
-			if(Sol.GetScore()>bestScore)
-			{System.out.print("+");
+			for(int subInd = 0; subInd<SubProblems.size();subInd++)
+			{
+				Problem subProb = subProblem(pb);
+	
+				Sol= ResolveSubProblem(subProb,Sol,rand);
+			 
 				
-				if(Sol.GetScore()>bestScore+0.5)
-				{
-					double sc = Sol.GetScore();
-					System.out.println("");
-					System.out.println("Id" + cf_id + " Params :" + "new Best Finished complicatedalgo Score : " +sc);
-					System.out.println(" Gain for round " + ( sc-firstScore) + " Gain per minute : " + (( sc-firstScore)/( System.currentTimeMillis() - firstTime)  *1000 * 60));
-					FullProcess.CheckSolution(Sol);
-					BestSolSynchro.StoreNewBestSolution(Sol);
+				
+				if(Sol.GetScore()>bestScore)
+				{System.out.print("+");
+					
+					if(Sol.GetScore()>bestScore+0.5  )// savve every 2s at max
+					{
 						
+						double sc = Sol.GetScore();
+						System.out.println("");
+						System.out.println("Id" + cf_id + " Params :" + "new Best Finished complicatedalgo Score : " +sc);
+						System.out.println(" Gain for round " + ( sc-firstScore) + " Gain per minute : " + (( sc-firstScore)/( System.currentTimeMillis() - firstTime)  *1000 * 60));
+						FullProcess.CheckSolution(Sol);
+						BestSolSynchro.StoreNewBestSolution(Sol);
+							
+					}
+					bestScore = Sol.GetScore();
+	//				bestSol = Common.DeepCopy(Sol);
+				}else
+				{
+					if(rand.nextDouble()<pRestart)
+					{
+						Sol = BestSolSynchro.gestBestSolution();
+						//Sol = Common.DeepCopy(bestSol);
+					}
+					if(subInd%50==0)
+						System.out.print(".");
 				}
-				bestScore = Sol.GetScore();
-				bestSol = Common.DeepCopy(Sol);
-			}else
-			{
-				Sol = Common.DeepCopy(bestSol);
-				if(subInd%50==0)
-					System.out.print(".");
-			}
 			
-			if(currentBestNum != BestSolSynchro.getNumSol())
-			{
-				System.out.print("Update" + this.cf_id);
-				Sol = BestSolSynchro.gestBestSolution();
-				Sol.pb = pb;
-				bestScore = Sol.GetScore();
-				currentBestNum = BestSolSynchro.getNumSol();
-			}
+				if(currentBestNum != BestSolSynchro.getNumSol())
+				{
+					System.out.print("Update" + this.cf_id);
+					Sol = BestSolSynchro.gestBestSolution();
+					Sol.pb = pb;
+					bestScore = Sol.GetScore();
+					currentBestNum = BestSolSynchro.getNumSol();
+				}
 			
 			
 			
@@ -113,9 +120,9 @@ public class AlgoInputToOutput implements  Runnable {
 		}
 		
 		
-		System.out.println("Finisher Divide"+ Sol.GetScore());
+		System.out.println("Finisher Divide"+ BestSolSynchro.BestSol.GetScore());
 		}
-		return Sol;
+		return BestSolSynchro.gestBestSolution();
 		
 		
 	}
@@ -124,6 +131,12 @@ public class AlgoInputToOutput implements  Runnable {
 	public Problem subProblem( Problem pb)
 	{
 			//TODO :create sub problem
+		//Problem subP = new Problem(pb);
+		
+		
+		
+		
+		
 		
 		Problem subP = pb;
 		return subP;
@@ -141,8 +154,8 @@ public class AlgoInputToOutput implements  Runnable {
 		double scoreCur = 0.0;
 		
 		
-		// Select NServersOpt servers
-		int NServersOpt = 5;
+		// Select 'NServersOpt' servers to optimize
+		int NServersOpt = 5;  // 1????
 		ArrayList<Server> servOptimized = new ArrayList<>();
 		for(int i = 0;i<NServersOpt;i++)
 		{
@@ -150,9 +163,9 @@ public class AlgoInputToOutput implements  Runnable {
 		}
 		
 		
-		int NITERATIONS = 100;
-		int NVIDEOREMOVEDPERSERVER = 20;//20;
-		
+		int NITERATIONS = 5;//100;
+		int NVIDEOREMOVEDPERSERVER = 50;//20;
+
 		for(int niteration = 0;niteration< NITERATIONS;niteration++)
 		{
 			
@@ -171,6 +184,9 @@ public class AlgoInputToOutput implements  Runnable {
 			}
 			
 			
+			LinkedList<Integer> TabuList = new LinkedList<>();
+			int Ntabu = 6;//Tavu list length
+			
 			// Put back best videos
 			int nit = 0;
 			
@@ -178,7 +194,7 @@ public class AlgoInputToOutput implements  Runnable {
 			{
 				nit++;
 				
-				double scoreInc = FillWithBestVideoGains( servOptimized, subProb);
+				double scoreInc = FillWithBestVideoGains( servOptimized, subProb, TabuList,Ntabu);
 				
 				scoreCur += scoreInc;
 				if(scoreInc == 0)
@@ -196,7 +212,7 @@ public class AlgoInputToOutput implements  Runnable {
 	}
 	
 	//select best videogains from in servers, and add it to cache. Returns Score change
-	private double FillWithBestVideoGains( ArrayList<Server>  CurServerList, Problem pb)
+	private double FillWithBestVideoGains( ArrayList<Server>  CurServerList, Problem pb, LinkedList<Integer> TabuList, int Ntabu)
 	{
 		double scoreChange = 0.0;
 		VideoGain bestVG = null;
@@ -205,7 +221,7 @@ public class AlgoInputToOutput implements  Runnable {
 		{
 			//VideoGain curVG = s.VideosPriority.peek();
 			VideoGain curVG = s.ReturnBestCandidateVideo();
-			if( (curVG!=null) && (bestVG == null ||  bestVG.Score < curVG.Score)    ) // TODO : add look into tree for best score that fits, and log size
+			if( (curVG!=null) && (bestVG == null ||  bestVG.Score < curVG.Score) && !TabuList.contains(curVG.VID)    ) // TODO : add look into tree for best score that fits, and log size
 			{
 				bestVG   = curVG;
 				bestServ = s;
@@ -213,14 +229,21 @@ public class AlgoInputToOutput implements  Runnable {
 			}
 			
 		}
-		
+	
 		
 		if(bestVG==null)
 		{
 			return scoreChange;
 		}else{
-			scoreChange=(bestVG.Score * (bestVG.V.size+pb.smallOffset))*1000.0/ pb.SR;
-			bestServ.PutVideoInCache(bestVG.V);
+			
+			TabuList.push(bestVG.VID);
+			if(TabuList.size()>Ntabu)
+			{
+				TabuList.removeLast();
+			}
+			
+			scoreChange=(bestVG.Score * ( pb.VideoList.get(bestVG.VID).size +pb.smallOffset))*1000.0/ pb.SR;
+			bestServ.PutVideoInCache(pb.VideoList.get(bestVG.VID));
 		}
 
 //		if(nit%10==0)
@@ -260,7 +283,7 @@ public class AlgoInputToOutput implements  Runnable {
 		{
 			for(Server s : pb.ServerList)
 			{
-				VideoGain VG = new VideoGain(vid, -1.0);
+				VideoGain VG = new VideoGain(vid.ID, -1.0);
 				s.AllVideoGains.add(VG);
 				s.VideosPriority.add(VG);
 				
@@ -280,8 +303,8 @@ public class AlgoInputToOutput implements  Runnable {
 		while(true)
 		{
 			nit++;
-			
-			double scoreInc = FillWithBestVideoGains( pb.ServerList, pb);
+			LinkedList<Integer> TabuList = new LinkedList<>();
+			double scoreInc = FillWithBestVideoGains( pb.ServerList, pb,TabuList,0);
 			
 			scoreCur += scoreInc;
 			if(scoreInc == 0)

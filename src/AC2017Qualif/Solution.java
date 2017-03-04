@@ -30,15 +30,8 @@ public class Solution implements Serializable, Cloneable {
 	protected Object clone() throws CloneNotSupportedException {
 		Solution sup = (Solution)super.clone();
 		
-		// TODO : code here what is needed fo deep cloning
-//		sup.Cells = new ArrayList<Cell>(Cells );
-//	
-//		sup.Pizza = this.Pizza.clone();
-//		for(int r=0;r<pb.R;r++)
-//		{
-//			sup.Pizza[r] = (this.Pizza[r]).clone();
-//
-//		}
+		// TODO : code here what is needed for deep cloning
+		sup.pb = (Problem)pb.clone();
 		
 		sup.curScore = this.curScore;
 		return sup;
@@ -67,7 +60,7 @@ public class Solution implements Serializable, Cloneable {
 	{
 
 		// *******************************
-		// ** Currently, hardcore version, recompute everything	**
+		// ** Recoputes score
 		//********************************
 		double tempscore = 0;
 		for(Request req :pb.RequestList)

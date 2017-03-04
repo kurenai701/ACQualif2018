@@ -1,7 +1,7 @@
 package AC2017Qualif;
 
 public class BestSolutionSynchro {
-	private Solution BestSol;
+	public Solution BestSol;
 	private int NumSol=0;
 	
 	private double lastBestTime;
@@ -48,9 +48,9 @@ public class BestSolutionSynchro {
 			
 			BestSol = tmp;
 			
-			if((curTime-this.lastSave) > 0)//30*1000)// Was a limit to a save to disk every 30 sec
+			if((curTime-this.lastSave) > 10*1000)//30*1000)// Was a limit to a save to disk every 30 sec
 			{
-				Sol.SaveSolutionAsRaw("_BestSolutionInProcess.ser");
+			//	Sol.SaveSolutionAsRaw("_BestSolutionInProcess.ser");
 				FullProcess.ProcessAllBackupOfSolutionToFolder(Sol);
 				this.lastSave = curTime;
 				
@@ -63,13 +63,15 @@ public class BestSolutionSynchro {
 	public synchronized Solution  gestBestSolution()
 	{
 		Solution resp=null;
-		try {
-			resp = (Solution)BestSol.clone();
-		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		resp.pb = BestSol.pb;
+//		try {
+//			resp = (Solution)BestSol.clone();
+//		} catch (CloneNotSupportedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		resp.pb = BestSol.pb;
+		
+		resp = Common.DeepCopy(BestSol);
 		return resp;
 	}
 	public synchronized int  getNumSol()
