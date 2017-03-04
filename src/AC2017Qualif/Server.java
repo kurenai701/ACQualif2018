@@ -40,17 +40,17 @@ public class Server {
 		{
 			EndPoint ep = rq.eP;
 			
-			if(ep.RequestList.containsKey(vid.ID))
-			{
+//			if(ep.RequestList.containsKey(vid.ID))
+//			{
 				Request Rq = (ep.RequestList.get(vid.ID));
 			
 				if(Rq.V.ID == vid.ID)
 				{
 					double inc = Math.max( 0.0, Rq.curLatency-ep.Latency4ServerList.get(servID))*Rq.Nreq;
-					resp +=inc/(vid.size+1e-6); 
+					resp +=inc/(vid.size+pb.smallOffset); 
 				}
 			
-			}
+//			}
 			
 		}
 		return resp;

@@ -202,7 +202,7 @@ public class AlgoInputToOutput implements  Runnable {
 			{
 				break;
 			}else{
-				scoreCor=(bestVG.Score * (bestVG.V.size+1e-6))*1000.0/pb.SR;
+				scoreCor=(bestVG.Score * (bestVG.V.size+pb.smallOffset))*1000.0/ pb.SR;
 				scoreCur += scoreCor;
 				bestServ.PutVideoInCache(bestVG.V);
 			}
@@ -212,8 +212,12 @@ public class AlgoInputToOutput implements  Runnable {
 				Sys.disp(" it " + nit +" score inc :" + scoreCor+ " Score : " + Math.floor(scoreCur));
 			}
 		}
+		
+		
+		Sys.disp(" Final Score : " + (scoreCur));
 		Sys.disp("Recomputed score : " + resp.GetScore());
 		
+		Sys.disp(" Final Score round : " + (long)Math.floor(scoreCur));
 		return resp;
 	}
 
