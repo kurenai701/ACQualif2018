@@ -2,19 +2,20 @@ package AC2017Qualif;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.concurrent.PriorityBlockingQueue;
 
 public class Server {
 	public Problem pb; 
 	public int servID;
 	//public ArrayList<EndPoint> ServedEndPoint;// All EndPoint served
 	public SortedSet<Integer> VideosCached;
-	PriorityBlockingQueue<VideoGain> VideosPriority;// contains the videos not yet in server sorted by potential gains
+	TreeSet<VideoGain> VideosPriority;// contains the videos not yet in server sorted by potential gains
 	ArrayList<VideoGain> AllVideoGains;// contains the gain of videos, indexed by video IDs. Used to update VideosPriority;
+	public int sizeUsed;
 	
-	
+	private  VideoGain StartPosForSmaller;
 	
 	public Server(int servID, Problem pb) {//, ArrayList<EndPoint> servedEndPoint
 		super();
@@ -23,13 +24,33 @@ public class Server {
 		VideosCached =  Collections.synchronizedSortedSet(new TreeSet<Integer>());
 		this.sizeUsed = 0;
 		AllVideoGains = new ArrayList<VideoGain>();
-		VideosPriority = new PriorityBlockingQueue<>();
+		VideosPriority = new TreeSet<>();
 		this.pb = pb;
-		
+		StartPosForSmaller = null;
 	}
-	public int sizeUsed;
 	
 	
+	
+	
+	// Return best video that fits the size remaining in server
+	public VideoGain ReturnBestCandidateVideo()
+	{
+		if(StartPosForSmaller==null)
+			StartPosForSmaller = VideosPriority.first();
+		if(sizeUsed<pb.X)
+		{
+			Set<VideoGain> K = VideosPriority.tailSet(StartPosForSmaller) ;
+			for( VideoGain  curVG :K )
+			{
+				if( curVG.V.size +sizeUsed <= pb.X  )
+					return curVG;
+				
+				StartPosForSmaller = curVG;
+			//	StartPosForSmaller = VideosPriority.first();
+			}
+		}
+		return null;
+	}
 	
 	
 	public double EvaluateGainAddingVideo(Video vid)
@@ -40,17 +61,17 @@ public class Server {
 		{
 			EndPoint ep = rq.eP;
 			
-			if(ep.RequestList.containsKey(vid.ID))
-			{
+//			if(ep.RequestList.containsKey(vid.ID))
+//			{
 				Request Rq = (ep.RequestList.get(vid.ID));
 			
 				if(Rq.V.ID == vid.ID)
 				{
 					double inc = Math.max( 0.0, Rq.curLatency-ep.Latency4ServerList.get(servID))*Rq.Nreq;
-					resp +=inc/(vid.size+1e-6); 
+					resp +=inc/(vid.size+Problem.smallOffset); 
 				}
 			
-			}
+//			}
 			
 		}
 		return resp;
@@ -123,7 +144,7 @@ public class Server {
 
 		// Update all VG scores for video
 		 updateAllServersVG( vid);
-
+		 
 	}
 	
 	
@@ -138,8 +159,18 @@ public class Server {
 				// compute gain and update priority list
 				s.VideosPriority.remove(VG2);
 				VG2.Score = s.EvaluateGainAddingVideo(vid);
-				s.VideosPriority.put(VG2);
+				s.VideosPriority.add(VG2);
 				
+				
+				// Update lookPointer for small enough Video
+				if(  VG2.compareTo(s.StartPosForSmaller)==0  )
+					s.StartPosForSmaller = s.VideosPriority.first();
+				
+				if(  VG2.compareTo(s.StartPosForSmaller)<0  )
+				{
+					if(VG2.V.size + s.sizeUsed <= pb.X)
+						s.StartPosForSmaller = VG2;
+				}
 				
 			}
 			

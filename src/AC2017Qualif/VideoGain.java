@@ -22,6 +22,8 @@ public class VideoGain implements Comparable<VideoGain> {
 
 	@Override
 	public int compareTo(VideoGain o) {
+		if(o==null)
+			return -1;
 		int c = Double.compare(o.Score,Score);
 		if(c==0)
 			return Integer.compare(o.V.ID,V.ID);
