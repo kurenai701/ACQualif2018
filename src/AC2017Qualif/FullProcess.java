@@ -12,9 +12,9 @@ public class FullProcess {
 	public static void main(String[] args) {
 	
 		boolean RELOAD = true;
-	//	Common.InputFileName = "kittens.in";Problem.smallOffset = 100;RELOAD = false;//100=> 1024782;  70 => 1024619   50 => 1024364   0 => 1021680
-	//Common.InputFileName = "videos_worth_spreading.in";Problem.smallOffset = 20;RELOAD = false;//20 => 608442
-	//Common.InputFileName = "trending_today.in";Problem.smallOffset = 20;RELOAD = false;//20 => 499984
+		//Common.InputFileName = "kittens.in";Problem.smallOffset = 100;RELOAD = false;//100=> 1024782;  70 => 1024619   50 => 1024364   0 => 1021680
+//	Common.InputFileName = "videos_worth_spreading.in";Problem.smallOffset = 20;RELOAD = false;//20 => 608442
+//	Common.InputFileName = "trending_today.in";Problem.smallOffset = 20;RELOAD = false;//20 => 499984
 		Common.InputFileName = "me_at_the_zoo.in";Problem.smallOffset = 10;RELOAD = false;//10 => 507906
 //		Common.InputFileName = "example.in";RELOAD = false;
 		
@@ -55,12 +55,12 @@ public class FullProcess {
 			
 			//return;//TODO
 			
-			//ProcessAllBackupOfSolutionToFolder(sol);
+			ProcessAllBackupOfSolutionToFolder(sol);
 		}else
 		{
 			 sol = (Solution)(Common.FU.DeserializeFileToObject(Common.ACFileFolderPath + Common.InputFileName + "_BestSolutionInProcess.ser"));//0000671212_0330-2224\\SolutionSerialized.ser" ));
 			
-			sol.pb = pbMod;
+			//sol.pb = pbMod;
 		}
 		
 		// Todo : do DeepCopy if needed
@@ -154,7 +154,7 @@ public class FullProcess {
 		Common.FU.CreateDir(targetBKPFolderPath);
 	
 		// Backup serialized solution class to BKP folder
-		sol.SaveSolutionAsRawToFullPath(targetBKPFolderPath+"\\"+ Common.SaveSerialFileName);
+////		sol.SaveSolutionAsRawToFullPath(targetBKPFolderPath+"\\"+ Common.SaveSerialFileName);
 		
 		// Backup generated output
 		genOut.GenerateOutputFileFromOutputModel(sol, targetBKPFolderPath +"\\"+ Common.OutputGeneratedFileName);

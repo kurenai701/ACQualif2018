@@ -47,6 +47,7 @@ public class AlgoInputToOutput implements  Runnable {
 		
 		// TODO : create sub problems
 		ArrayList<Problem> SubProblems = new ArrayList<Problem>();
+		Solution bestSol = Common.DeepCopy(Sol);
 		double bestScore = Sol.GetScore();
 		double firstScore = bestScore;
 		double firstTime = System.currentTimeMillis();
@@ -86,12 +87,13 @@ public class AlgoInputToOutput implements  Runnable {
 					System.out.println(" Gain for round " + ( sc-firstScore) + " Gain per minute : " + (( sc-firstScore)/( System.currentTimeMillis() - firstTime)  *1000 * 60));
 					FullProcess.CheckSolution(Sol);
 					BestSolSynchro.StoreNewBestSolution(Sol);
-
+						
 				}
 				bestScore = Sol.GetScore();
-			
+				bestSol = Common.DeepCopy(Sol);
 			}else
 			{
+				Sol = Common.DeepCopy(bestSol);
 				if(subInd%50==0)
 					System.out.print(".");
 			}
@@ -148,8 +150,8 @@ public class AlgoInputToOutput implements  Runnable {
 		}
 		
 		
-		int NITERATIONS = 20;
-		int NVIDEOREMOVEDPERSERVER = 30;
+		int NITERATIONS = 100;
+		int NVIDEOREMOVEDPERSERVER = 20;//20;
 		
 		for(int niteration = 0;niteration< NITERATIONS;niteration++)
 		{

@@ -37,13 +37,15 @@ public class BestSolutionSynchro {
 			
 			
 			Solution tmp=null;
-			try {
-				tmp = (Solution) Sol.clone();
-				tmp.pb = Sol.pb;
-			} catch (CloneNotSupportedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				tmp = (Solution) Sol.clone();
+//				tmp.pb = Sol.pb;
+//			} catch (CloneNotSupportedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+			tmp = Common.DeepCopy(Sol);
+			
 			BestSol = tmp;
 			
 			if((curTime-this.lastSave) > 0)//30*1000)// Was a limit to a save to disk every 30 sec

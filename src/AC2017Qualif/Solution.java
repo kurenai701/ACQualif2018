@@ -74,18 +74,24 @@ public class Solution implements Serializable, Cloneable {
 		{
 			double LD = req.eP.LD;
 			double LC = LD;
-			for(Server s : pb.ServerList)
+			if(false)
 			{
-				if(s.VideosCached.contains(req.V.ID))
+				for(Server s : pb.ServerList)
 				{
-					LC = Math.min(LC, req.eP.Latency4ServerList.get(s.servID));
+					if(s.VideosCached.contains(req.V.ID))
+					{
+						LC = Math.min(LC, req.eP.Latency4ServerList.get(s.servID));
+					}
 				}
+				
+				if(LC!=req.curLatency)
+				{
+					Sys.disp("Error, curLatency of Endpoint not valid!!!");
+				}
+			}else{
+				LC=req.curLatency;
 			}
 			
-			if(LC!=req.curLatency)
-			{
-				Sys.disp("Error, curLatency of Endpoint not valid!!!");
-			}
 			
 			
 			
