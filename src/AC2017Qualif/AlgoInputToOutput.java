@@ -61,7 +61,9 @@ public class AlgoInputToOutput implements  Runnable {
 		//*************
 		
 		SubProblems.add(pb);// Currently, no divide and conquer
-		double pRestart = 0.9;
+
+		int NSERVSUB = 5;// Optimize on around NSERVSUB servers at a time
+		int NITSUB = 30;
 		
 		for( int nit = 0;nit<NIT;nit++)
 		{
@@ -73,12 +75,55 @@ public class AlgoInputToOutput implements  Runnable {
 		
 			for(int subInd = 0; subInd<SubProblems.size();subInd++)
 			{
-				Problem subProb = subProblem(pb);
-	
-			//	Sol= ResolveSubProblem2(subProb,Sol,rand);
-				Sol= ResolveSubProblem(subProb,Sol,rand);
+				ArrayList<Server> ServerListSubpb = new ArrayList<>();
+				for(int nserv=0;nserv<NSERVSUB;nserv++)
+					ServerListSubpb.add( pb.ServerList.get(rand.nextInt(pb.ServerList.size())));
 				
-		//		Sys.disp("bestScore"+bestScore);
+				
+				Problem subProb = subProblem(pb,ServerListSubpb);
+				Solution SubSol = new Solution(subProb);
+				double initScore = SubSol.GetScore();
+				BestSolutionSynchro BestSolSynchroSub = new BestSolutionSynchro(SubSol );
+				Sol.curScore = -1000;
+				Sys.disp(" Full Sol score :" + Sol.GetScore() + "  subScore : " + SubSol.GetScore());
+				if(Sol.GetScore() != SubSol.GetScore())
+					Sys.disp("Error in subsol score");
+				
+				// ***********************  Call optimisation on subproblem *************************************
+				SubSol= IterativelyResolveSubProblem(subProb,SubSol,rand,BestSolSynchroSub, NITSUB);
+				
+				Sol.curScore = -1000;SubSol.curScore=-1000;
+				Sys.disp("After iteration : Full Sol score :" + Sol.GetScore() + "  subScore : " + SubSol.GetScore());
+				// *********************************************************
+				if(SubSol.GetScore() >  initScore)
+				{
+					Sys.disp("Subproblem improvement from "+ initScore + " to " + SubSol.GetScore() + " => Putting it back in main Solution");
+			
+					
+					for( Server Subs : SubSol.pb.ServerList)
+					{
+						Server s = pb.ServerList.get( Subs.originalServID);
+						// Remove all old videos
+						while( !s.VideosCached.isEmpty())
+						{
+							s.RemoveVideoFromCache(pb.VideoList.get(s.VideosCached.first()    ));
+						}
+						
+						// Put new videos
+						for( int vid : Subs.VideosCached)
+						{
+							boolean PutOk = s.PutVideoInCache(pb.VideoList.get(vid));
+							if(!PutOk)
+								Sys.disp("Error in put");
+						}
+
+					}
+					Sol.curScore = -1000;
+					if(Sol.GetScore() != SubSol.GetScore())
+						Sys.disp("Error in Sol getback score,  expecte : " +SubSol.GetScore() + " got " + Sol.GetScore());
+					
+				}
+				
 				
 				if(Sol.GetScore()>bestScore ||  (Sol.GetScore()==bestScore && Sol.improved ==true))
 				{System.out.print("+");
@@ -95,20 +140,17 @@ public class AlgoInputToOutput implements  Runnable {
 							
 					}else
 					{
-						System.out.println("Better compactness");
-						BestSolSynchro.StoreNewBestSolution(Sol);
+//						System.out.println("Better compactness");
+//						BestSolSynchro.StoreNewBestSolution(Sol);
 					}
 					bestScore = Sol.GetScore();
-	//				bestSol = Common.DeepCopy(Sol);
 					Sol.improved =false;
 				}else
 				{
-					if(rand.nextDouble()<pRestart)
-					{
-						Sol = BestSolSynchro.gestBestSolution();
-			//			System.out.print("Restart");
-						//Sol = Common.DeepCopy(bestSol);
-					}
+//					if(rand.nextDouble()<pRestart)// Useful???
+//					{
+//						Sol = BestSolSynchro.gestBestSolution();
+//					}
 					if(subInd%50==0)
 						System.out.print(".");
 				}
@@ -122,31 +164,82 @@ public class AlgoInputToOutput implements  Runnable {
 					currentBestNum = BestSolSynchro.getNumSol();
 				}
 			
-			
-			
+				
+				
+			}
 			
 		}
 		
-		
-		System.out.println("Finisher Divide"+ BestSolSynchro.BestSol.GetScore());
-		}
 		return BestSolSynchro.gestBestSolution();
 		
-		
 	}
+			
+			
+			private Solution IterativelyResolveSubProblem(Problem subProb, Solution subSol, SplittableRandom rand, BestSolutionSynchro BestSolSynchroSub, int NITSUB)
+			{
+				double pRestart = 0.9;
+				
+				double bestScore = subSol.GetScore();
+				double firstScore = bestScore;
+				double firstTime = System.currentTimeMillis();
+				for( int nit = 0;nit<NITSUB;nit++)
+				{
+				
+				
+				
+			//	subSol= ResolveSubProblem2(subProb,subSol,rand);
+				subSol= ResolveSubProblem(subProb,subSol,rand);
+				
+		//		Sys.disp("bestScore"+bestScore);
+				
+				if(subSol.GetScore()>bestScore ||  (subSol.GetScore()==bestScore && subSol.improved ==true))
+				{System.out.print("+");
+				
+					if(subSol.GetScore()>bestScore+0.5  )//
+					{
+						
+						double sc = subSol.GetScore();
+						System.out.println("");
+						System.out.println("SUB   Id" + cf_id + " Params :" + "new Best Finished complicatedalgo Score : " +sc);
+					//	System.out.println(" Gain for round " + ( sc-firstScore) + " Gain per minute : " + (( sc-firstScore)/( System.currentTimeMillis() - firstTime)  *1000 * 60));
+						BestSolSynchroSub.StoreNewBestSolution(subSol,false);
+							
+					}else
+					{
+						System.out.println("Better compactness");
+						BestSolSynchroSub.StoreNewBestSolution(subSol,false);
+					}
+					bestScore = subSol.GetScore();
+	//				bestSol = Common.DeepCopy(Sol);
+					subSol.improved =false;
+				}else
+				{
+					if(rand.nextDouble()<pRestart)
+					{
+						subSol = BestSolSynchroSub.gestBestSolution();
+			//			System.out.print("Restart");
+						//Sol = Common.DeepCopy(bestSol);
+					}
+
+				}
+
+			
+		}
+		
+		
+		System.out.println("Finisher Divide first "+ firstScore + " new : "+ BestSolSynchroSub.BestSol.GetScore() );
+		
+		return BestSolSynchroSub.gestBestSolution();
+		}
+			
+			
 	
 	// Return a subProblem 
-	public Problem subProblem( Problem pb)
+	public Problem subProblem( Problem pb,ArrayList<Server> ServerListSubpb)
 	{
 			//TODO :create sub problem
-		//Problem subP = new Problem(pb);
-		
-		
-		
-		
-		
-		
-		Problem subP = pb;
+		Problem subP = new Problem(pb,ServerListSubpb);
+
 		return subP;
 		
 	}
@@ -305,10 +398,10 @@ public class AlgoInputToOutput implements  Runnable {
 		
 		
 		// Select 'NServersOpt' servers to optimize
-		int NServersOpt = 1;  // 1????
+		int NServersOpt = 4;  // 1????
 		int NITERATIONS = 2;//3
 		int NVIDEOREMOVEDPERSERVER = 30;//20;
-		int Ntabu = 1;// rand.nextInt(15);//Tabu list length
+		int Ntabu = 6;// rand.nextInt(15);//Tabu list length
 		double paccept =1.0;
 		
 		ArrayList<Server> servOptimized = new ArrayList<>();
@@ -391,6 +484,9 @@ public class AlgoInputToOutput implements  Runnable {
 	{
 			return sol;
 	}
+	
+	
+	
 	
 	// Algorithm used to find initial best solution
 	public Solution AlgoInit(Problem pb, SplittableRandom rand)

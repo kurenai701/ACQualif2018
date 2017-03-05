@@ -29,8 +29,13 @@ public class BestSolutionSynchro {
 		startScore = bestSol.GetScore();
 	}
 	
-	
 	public synchronized void  StoreNewBestSolution(Solution Sol)
+	{
+		StoreNewBestSolution( Sol, true);
+	}
+	
+	
+	public synchronized void  StoreNewBestSolution(Solution Sol,boolean saveToDisk)
 	{
 		FullProcess.CheckSolution(Sol);
 		double margin = 0.0;
@@ -51,13 +56,16 @@ public class BestSolutionSynchro {
 			tmp = Common.DeepCopy(Sol);
 			
 			BestSol = tmp;
-			
-			if((curTime-this.lastSave) > 0*1000)//30*1000)// Was a limit to a save to disk every 30 sec
+			if(saveToDisk)
 			{
-				// Sol.SaveSolutionAsRaw("_BestSolutionInProcess.ser");
-				FullProcess.ProcessAllBackupOfSolutionToFolder(Sol);
-				this.lastSave = curTime;
-				
+				if((curTime-this.lastSave) > 0*1000)//30*1000)// Was a limit to a save to disk every 30 sec
+				{
+					Sys.disp("Saving to Disk");
+					// Sol.SaveSolutionAsRaw("_BestSolutionInProcess.ser");
+					FullProcess.ProcessAllBackupOfSolutionToFolder(Sol);
+					this.lastSave = curTime;
+					
+				}
 			}
 			NumSol++;
 			this.lastBestTime = curTime;	

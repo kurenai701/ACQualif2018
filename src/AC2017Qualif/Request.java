@@ -18,6 +18,7 @@ public class Request implements Comparable<Request> , Serializable{
 	// Updateable
 	public int curServer;// Current server providing the service. -1 for global
 	public long curLatency;// current latency for request
+	public long Latency2ExternalServer;// Latency to main server or server outside subproblem
 	
 	public Request(Video v, EndPoint eP, long nreq, int curServer, long curLatency, int ReqID) {
 		super();
@@ -27,6 +28,7 @@ public class Request implements Comparable<Request> , Serializable{
 		this.curServer = curServer;
 		this.curLatency = curLatency;
 		this.ReqID= ReqID;
+		this.Latency2ExternalServer = eP.LD;
 	}
 
 	
@@ -34,9 +36,9 @@ public class Request implements Comparable<Request> , Serializable{
 	{
 		// Updates the request : Recomputes current Latency and current server
 		
-		curLatency = eP.LD;
+		curLatency = Latency2ExternalServer;
 		this.curServer = -1;
-		for(Server s : pb.ServerList)
+		for(Server s : pb.ServerList)//TODO : could improve search by limiting to server with video
 		{
 			if(eP.Latency4ServerList.get(s.servID) <  curLatency && s.VideosCached.contains(V.ID)  )
 			{

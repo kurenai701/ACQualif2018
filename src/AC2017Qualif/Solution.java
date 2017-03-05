@@ -22,7 +22,7 @@ public class Solution implements Serializable, Cloneable {
 					
 	//************************************************************
 	
-	final double COEFCOMPACT = 1e-9;
+	final double COEFCOMPACT = 0;//1e-11;
 		
 
 	
@@ -65,25 +65,25 @@ public class Solution implements Serializable, Cloneable {
 		double tempscore = 0;
 		for(Request req :pb.RequestList)
 		{
-			double LD = req.eP.LD;
+			double LD = req.eP.LD;// req.Latency2ExternalServer;
 			double LC = LD;
-//			if(false)
-//			{
-//				for(Server s : pb.ServerList)
-//				{
-//					if(s.VideosCached.contains(req.V.ID))
-//					{
-//						LC = Math.min(LC, req.eP.Latency4ServerList.get(s.servID));
-//					}
-//				}
-//				
-//				if(LC!=req.curLatency)
-//				{
-//					Sys.disp("Error, curLatency of Endpoint not valid!!!");
-//				}
-//			}else{
+			if(false)
+			{
+				for(Server s : pb.ServerList)
+				{
+					if(s.VideosCached.contains(req.V.ID))
+					{
+						LC = Math.min(LC, req.eP.Latency4ServerList.get(s.servID));
+					}
+				}
+				
+				if(LC!=req.curLatency)
+				{
+					Sys.disp("Error, curLatency of Endpoint not valid!!!");
+				}
+			}else{
 				LC=req.curLatency;
-//			}
+			}
 			
 			tempscore += (LD-LC)*req.Nreq*1000.0/pb.SR;
 		}	
@@ -108,8 +108,8 @@ public class Solution implements Serializable, Cloneable {
 	
 	public double GetScore()
 	{
-		if(curScore>-100)
-			return curScore;
+//		if(curScore>-100)
+//			return curScore;
 		
 		ScoreInfo scoringInfo = this.GetScoreModel();
 		curScore = scoringInfo.score;

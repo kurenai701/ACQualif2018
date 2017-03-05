@@ -78,7 +78,7 @@ public class ReadInput {
 					latencyToServerList.set(c, lc);
 				}
 				
-				EndPoint endp = new EndPoint(i, ld, k, latencyToServerList, pb.ServerList);
+				EndPoint endp = new EndPoint(i, ld,latencyToServerList);
 				
 				// Now that the endpoint is created, add endpoint to servers connected.
 				for (Integer c: serverToUpdateWithEndpoint)

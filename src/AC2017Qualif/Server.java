@@ -14,6 +14,7 @@ public class Server implements Serializable {
 	private static final long serialVersionUID = 6788409562011863866L;
 	public Problem pb; 
 	public int servID;
+	public int originalServID;
 	//public ArrayList<EndPoint> ServedEndPoint;// All EndPoint served
 	public SortedSet<Integer> VideosCached;
 	TreeSet<VideoGain> VideosPriority;// contains the videos not yet in server sorted by potential gains
@@ -91,36 +92,42 @@ public class Server implements Serializable {
 		
 		// Update size
 		if(VideosCached.contains(vid.ID))
+		{
 			sizeUsed = sizeUsed - vid.size;
 		
-		// Remove video from server
-		VideosCached.remove(vid.ID);
+			// Remove video from server
+			VideosCached.remove(vid.ID);
 		
-		// Update affected RequestList
-		for(Request Rq : pb.RequestForVideo.get(vid.ID))// Nendpoint iteration.  Could be optimized by using only the Endpoints with request for this video
-		{
-			// Update Request
-			Rq.UpdateStat(pb);
-			
-		}
+			// Update affected RequestList
+			for(Request Rq : pb.RequestForVideo.get(vid.ID))// Nendpoint iteration.  Could be optimized by using only the Endpoints with request for this video
+			{
+				// Update Request
+				Rq.UpdateStat(pb);
+				
+			}
 					
-		// Add to priority queue
-			VideosPriority.add(VG);
-		//Update pointer. Put it at start of priority queue (since we removed a video, high probability that another one will fit.
-			StartPosForSmaller = VideosPriority.first();
+			// Add to priority queue
+				VideosPriority.add(VG);
+			//Update pointer. Put it at start of priority queue (since we removed a video, high probability that another one will fit.
+				StartPosForSmaller = VideosPriority.first();
 			
 			
-		// Update all VG scores for video
-		 updateAllServersVG( vid);
-		
+			// Update all VG scores for video
+			 updateAllServersVG( vid);
+		}
 		
 		
 		
 	}
 	
+	public boolean PutVideoInCache(Video vid)
+	{
+	 return PutVideoInCache(vid,true);
+	}
+	
 
 	// Put video in server. 
-	public boolean PutVideoInCache(Video vid)
+	public boolean PutVideoInCache(Video vid,boolean updateVG)
 	{
 		// Get videoGain
 		VideoGain VG = AllVideoGains.get(vid.ID);
@@ -149,7 +156,7 @@ public class Server implements Serializable {
 		for(Request Rq : pb.RequestForVideo.get(vid.ID))// Nendpoint iteration.  Could be optimized by using only the Endpoints with request for this video
 		{
 			
-			Rq.curLatency = Math.min( Math.min(Rq.eP.LD,Rq.curLatency ), Rq.eP.Latency4ServerList.get(servID));
+			Rq.curLatency = Math.min( Math.min(Rq.Latency2ExternalServer ,Rq.curLatency ), Rq.eP.Latency4ServerList.get(servID));
 			
 		}
 		
@@ -158,8 +165,10 @@ public class Server implements Serializable {
 		
 
 		// Update all VG scores for video
-		 updateAllServersVG( vid);
-			return true;
+		if(updateVG)
+			updateAllServersVG( vid);
+		
+		return true;
 	}
 	
 	
