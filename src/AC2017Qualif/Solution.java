@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
   
 public class Solution implements Serializable, Cloneable {
-	
+	public boolean improved = false;
 	
 	private static final long serialVersionUID = 420L;
 	
@@ -22,7 +22,7 @@ public class Solution implements Serializable, Cloneable {
 					
 	//************************************************************
 	
-	
+	final double COEFCOMPACT = 1e-9;
 		
 
 	
@@ -67,31 +67,36 @@ public class Solution implements Serializable, Cloneable {
 		{
 			double LD = req.eP.LD;
 			double LC = LD;
-			if(false)
-			{
-				for(Server s : pb.ServerList)
-				{
-					if(s.VideosCached.contains(req.V.ID))
-					{
-						LC = Math.min(LC, req.eP.Latency4ServerList.get(s.servID));
-					}
-				}
-				
-				if(LC!=req.curLatency)
-				{
-					Sys.disp("Error, curLatency of Endpoint not valid!!!");
-				}
-			}else{
+//			if(false)
+//			{
+//				for(Server s : pb.ServerList)
+//				{
+//					if(s.VideosCached.contains(req.V.ID))
+//					{
+//						LC = Math.min(LC, req.eP.Latency4ServerList.get(s.servID));
+//					}
+//				}
+//				
+//				if(LC!=req.curLatency)
+//				{
+//					Sys.disp("Error, curLatency of Endpoint not valid!!!");
+//				}
+//			}else{
 				LC=req.curLatency;
-			}
-			
-			
-			
-			
+//			}
 			
 			tempscore += (LD-LC)*req.Nreq*1000.0/pb.SR;
+		}	
 			
-		}
+//			// Compact server: give a bonus to have smaller server use
+			for(Server s : pb.ServerList)
+			{
+				tempscore +=  1.0/(pb.X-s.sizeUsed+1.0)*COEFCOMPACT;// 1/x pent decrease with higher values
+			}	
+			
+			
+			
+		
 		
 		
 		
@@ -110,6 +115,24 @@ public class Solution implements Serializable, Cloneable {
 		curScore = scoringInfo.score;
 		return scoringInfo.score;
 	}
+	
+	
+//	//Update score for video
+//	public UpdateScore(Video vid)
+//	{
+//		for(Request req :pb.RequestForVideo.get(vid.ID))
+//		{
+//			
+//			
+//		}
+//		
+//		for(Server s : pb.ServerList)
+//		{
+//			tempscore = tempscore +1.0/(pb.X-s.sizeUsed+1.0)*COEFCOMPACT;// 1/x pent decrease with higher values
+//		}	
+//		
+//	}
+	
 	
 	public double PrintScore()
 	{ 	

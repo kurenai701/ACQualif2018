@@ -49,18 +49,19 @@ public class AlgoInputToOutput implements  Runnable {
 		// TODO : create sub problems
 		ArrayList<Problem> SubProblems = new ArrayList<Problem>();
 	//	Solution bestSol = Common.DeepCopy(Sol);
+		Sol.curScore = -1000;
 		double bestScore = Sol.GetScore();
 		double firstScore = bestScore;
 		double firstTime = System.currentTimeMillis();
 		
 		int currentBestNum = BestSolSynchro.getNumSol();
-		
+	//	Sys.disp("START");
 		
 		
 		//*************
 		
 		SubProblems.add(pb);// Currently, no divide and conquer
-		double pRestart = 0.3;
+		double pRestart = 0.9;
 		
 		for( int nit = 0;nit<NIT;nit++)
 		{
@@ -74,14 +75,15 @@ public class AlgoInputToOutput implements  Runnable {
 			{
 				Problem subProb = subProblem(pb);
 	
+			//	Sol= ResolveSubProblem2(subProb,Sol,rand);
 				Sol= ResolveSubProblem(subProb,Sol,rand);
-			 
 				
+		//		Sys.disp("bestScore"+bestScore);
 				
-				if(Sol.GetScore()>bestScore)
+				if(Sol.GetScore()>bestScore ||  (Sol.GetScore()==bestScore && Sol.improved ==true))
 				{System.out.print("+");
-					
-					if(Sol.GetScore()>bestScore+0.5  )// savve every 2s at max
+				
+					if(Sol.GetScore()>bestScore+0.5  )//
 					{
 						
 						double sc = Sol.GetScore();
@@ -91,14 +93,20 @@ public class AlgoInputToOutput implements  Runnable {
 						FullProcess.CheckSolution(Sol);
 						BestSolSynchro.StoreNewBestSolution(Sol);
 							
+					}else
+					{
+						System.out.println("Better compactness");
+						BestSolSynchro.StoreNewBestSolution(Sol);
 					}
 					bestScore = Sol.GetScore();
 	//				bestSol = Common.DeepCopy(Sol);
+					Sol.improved =false;
 				}else
 				{
 					if(rand.nextDouble()<pRestart)
 					{
 						Sol = BestSolSynchro.gestBestSolution();
+			//			System.out.print("Restart");
 						//Sol = Common.DeepCopy(bestSol);
 					}
 					if(subInd%50==0)
@@ -144,21 +152,164 @@ public class AlgoInputToOutput implements  Runnable {
 	}
 	
 	
+	
+	
+	// This algorithm tries to compact the server by exchanging 2 videos between servers.
+	public Solution ResolveSubProblem2( Problem subProb, Solution Sol,  SplittableRandom rand)
+	{
+		Sol.curScore = -1000;
+		double bestScore = Sol.GetScore();
+	//	Sys.disp("initialScore :"+bestScore);
+		//Solution subSol = new Solution(subProb);
+		Sol.curScore = -1000;
+		
+		 int NITERATIONS = 30;//100
+		 int NSERVPAIRS  = 200;//500
+		
+		for(int nservpair = 0;nservpair < NSERVPAIRS;nservpair++)
+		{
+		
+		Server serv1 = subProb.ServerList.get(rand.nextInt(subProb.ServerList.size()));
+		Server serv2 = subProb.ServerList.get(rand.nextInt(subProb.ServerList.size()));
+		
+		if(serv1.servID==serv2.servID)
+			continue;
+		
+		double prodSize =  serv1.sizeUsed * serv2.sizeUsed;
+		
+		Integer[]  Vidlist1 = serv1.VideosCached.toArray(new Integer[serv1.VideosCached.size()]);
+		Integer[]  Vidlist2 = serv2.VideosCached.toArray(new Integer[serv2.VideosCached.size()]);
+		if(Vidlist1.length==0 || Vidlist2.length==0)
+			return Sol;
+
+		// Try exchange of two videos between servers
+		for(int niteration = 0;niteration< NITERATIONS;niteration++)
+		{
+				int vid1 = Vidlist1[rand.nextInt( Vidlist1.length)];
+				int vid2 = Vidlist2[rand.nextInt( Vidlist2.length)];
+				if(vid1==vid2)
+					continue;
+				
+	
+				
+				serv1.RemoveVideoFromCache( subProb.VideoList.get(vid1));
+				serv2.RemoveVideoFromCache( subProb.VideoList.get( vid2));
+				boolean addedin1 = serv1.PutVideoInCache(subProb.VideoList.get(vid2));
+				boolean addedin2 = serv2.PutVideoInCache(subProb.VideoList.get(vid1));
+				Sol.curScore = -1000;
+				double newScore = Sol.GetScore();
+				if(newScore>bestScore  )// || (newScore==initialScore)&& serv1.sizeUsed * serv2.sizeUsed <prodSize )// prodsize is used to enforce movements that concentrate videos 
+				{
+					bestScore = newScore;
+					//Sys.disp("newScore :"+newScore);
+					System.out.print("x");
+					prodSize = serv1.sizeUsed * serv2.sizeUsed;
+					Sol.improved = true;
+				}else
+				{
+					if(addedin1)
+						serv1.RemoveVideoFromCache( subProb.VideoList.get(vid2));
+					if(addedin2)
+						serv2.RemoveVideoFromCache( subProb.VideoList.get( vid1));
+					serv1.PutVideoInCache(subProb.VideoList.get(vid1));
+					serv2.PutVideoInCache(subProb.VideoList.get(vid2));
+					
+				
+				}
+//				Sol.curScore = -1000;
+//				double outs = Sol.GetScore();
+//				if(outs != bestScore)
+//					Sys.disp("ERROR");
+				
+		}
+		
+			
+		}
+		
+		Sol.curScore = -1000;
+		Sys.disp("Score at output :"+ Sol.GetScore());
+		return Sol;
+	}
+	
+	//select best videogains from in servers, and add it to cache. Returns Score change
+	private double FillWithBestVideoGains( ArrayList<Server>  CurServerList, Problem pb, LinkedList<Integer> TabuList, int Ntabu,double paccept,  SplittableRandom rand)
+	{
+		double scoreChange = 0.0;
+		VideoGain bestVG = null;
+		Server bestServ = null;
+		for(Server s : CurServerList)
+		{
+			//VideoGain curVG = s.VideosPriority.peek();
+			VideoGain curVG = s.ReturnBestCandidateVideo();
+			if( (curVG!=null) && (bestVG == null ||  bestVG.Score <= curVG.Score) && !TabuList.contains(curVG.VID) && paccept>rand.nextDouble()   ) // TODO : add look into tree for best score that fits, and log size
+			{
+				if(bestVG == null || bestVG.Score < curVG.Score)
+				{
+					bestVG   = curVG;
+					bestServ = s;
+				}else
+				{
+					//Best fit algorithm
+					if( s.sizeUsed> bestServ.sizeUsed  )
+					{
+						bestVG   = curVG;
+						bestServ = s;
+				//		Sys.disp("Best fitting");
+					}
+					
+					
+				}
+				
+			}
+			
+		}
+	
+		
+		
+		if(bestVG==null)
+		{
+			TabuList.removeLast();
+			return scoreChange;
+		}else{
+			
+			TabuList.push(bestVG.VID);
+			if(TabuList.size()>Ntabu)
+			{
+				TabuList.removeLast();
+			}
+			
+			scoreChange=(bestVG.Score * ( pb.VideoList.get(bestVG.VID).size +pb.smallOffset))*1000.0/ pb.SR;
+			bestServ.PutVideoInCache(pb.VideoList.get(bestVG.VID));
+		}
+
+//		if(nit%10==0)
+//		{
+//			Sys.disp(" put video :" + bestVG.V.ID + " in server:" + bestServ.servID ) ;
+//			Sys.disp(" it " + nit +" score inc :" + scoreCor+ " Score : " + Math.floor(scoreCur));
+//		}
+		
+		
+		return scoreChange;
+		
+	}
+	
+	
+	
+
 	public Solution ResolveSubProblem( Problem subProb, Solution Sol,  SplittableRandom rand)
 	{
 
 		//Solution subSol = new Solution(subProb);
 		Sol.curScore = -100;
 		
-		// Resolve subProblem
-		double scoreCur = 0.0;
 		
 		
 		// Select 'NServersOpt' servers to optimize
-		int NServersOpt = 2;  // 1????
-		int NITERATIONS = 1;//3
-		int NVIDEOREMOVEDPERSERVER = 100;//20;
-		int Ntabu = rand.nextInt(15);//Tabu list length
+		int NServersOpt = 1;  // 1????
+		int NITERATIONS = 2;//3
+		int NVIDEOREMOVEDPERSERVER = 30;//20;
+		int Ntabu = 1;// rand.nextInt(15);//Tabu list length
+		double paccept =1.0;
 		
 		ArrayList<Server> servOptimized = new ArrayList<>();
 		for(int i = 0;i<NServersOpt;i++)
@@ -200,9 +351,9 @@ public class AlgoInputToOutput implements  Runnable {
 			{
 				nit++;
 				
-				double scoreInc = FillWithBestVideoGains( servOptimized, subProb, TabuList,Ntabu);
+				double scoreInc = FillWithBestVideoGains( servOptimized, subProb, TabuList,Ntabu,paccept,rand);
 				
-				scoreCur += scoreInc;
+			
 				if(scoreInc == 0)
 					break;
 
@@ -217,51 +368,13 @@ public class AlgoInputToOutput implements  Runnable {
 		return Sol;
 	}
 	
-	//select best videogains from in servers, and add it to cache. Returns Score change
-	private double FillWithBestVideoGains( ArrayList<Server>  CurServerList, Problem pb, LinkedList<Integer> TabuList, int Ntabu)
-	{
-		double scoreChange = 0.0;
-		VideoGain bestVG = null;
-		Server bestServ = null;
-		for(Server s : CurServerList)
-		{
-			//VideoGain curVG = s.VideosPriority.peek();
-			VideoGain curVG = s.ReturnBestCandidateVideo();
-			if( (curVG!=null) && (bestVG == null ||  bestVG.Score < curVG.Score) && !TabuList.contains(curVG.VID)    ) // TODO : add look into tree for best score that fits, and log size
-			{
-				bestVG   = curVG;
-				bestServ = s;
-				
-			}
-			
-		}
 	
-		
-		if(bestVG==null)
-		{
-			return scoreChange;
-		}else{
-			
-			TabuList.push(bestVG.VID);
-			if(TabuList.size()>Ntabu)
-			{
-				TabuList.removeLast();
-			}
-			
-			scoreChange=(bestVG.Score * ( pb.VideoList.get(bestVG.VID).size +pb.smallOffset))*1000.0/ pb.SR;
-			bestServ.PutVideoInCache(pb.VideoList.get(bestVG.VID));
-		}
-
-//		if(nit%10==0)
-//		{
-//			Sys.disp(" put video :" + bestVG.V.ID + " in server:" + bestServ.servID ) ;
-//			Sys.disp(" it " + nit +" score inc :" + scoreCor+ " Score : " + Math.floor(scoreCur));
-//		}
-		
-		
-		return scoreChange;
-		
-	}
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -310,7 +423,7 @@ public class AlgoInputToOutput implements  Runnable {
 		{
 			nit++;
 			LinkedList<Integer> TabuList = new LinkedList<>();
-			double scoreInc = FillWithBestVideoGains( pb.ServerList, pb,TabuList,0);
+			double scoreInc = FillWithBestVideoGains( pb.ServerList, pb,TabuList,0,1,rand);
 			
 			scoreCur += scoreInc;
 			if(scoreInc == 0)

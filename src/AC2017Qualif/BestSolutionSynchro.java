@@ -13,16 +13,19 @@ public class BestSolutionSynchro {
 		super();
 		this.lastBestTime = System.currentTimeMillis();
 		Solution tmp=null;
-		try {
-			tmp = (Solution) bestSol.clone();
-			tmp.pb = bestSol.pb;
-		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			tmp = (Solution) bestSol.clone();
+//			tmp.pb = bestSol.pb;
+//		} catch (CloneNotSupportedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		tmp = Common.DeepCopy(bestSol);
+		
 		BestSol = tmp;
 		startTime = System.currentTimeMillis();
 		lastSave = startTime;
+		bestSol.curScore=-1000;
 		startScore = bestSol.GetScore();
 	}
 	
@@ -30,7 +33,8 @@ public class BestSolutionSynchro {
 	public synchronized void  StoreNewBestSolution(Solution Sol)
 	{
 		FullProcess.CheckSolution(Sol);
-		if(Sol.GetScore() > BestSol.GetScore()+0.5)// todo : to adapt
+		double margin = 0.0;
+		if(Sol.GetScore() > BestSol.GetScore()+margin ||  (Sol.GetScore()==BestSol.GetScore()+margin && Sol.improved ==true))// todo : to adapt
 		{
 			double curTime = System.currentTimeMillis();
 			System.out.printf("BestSolution update, gain/min from last: %04.2f  || gain/minute total: %04.2f \n" ,(Sol.GetScore() - BestSol.GetScore())/ (curTime-this.lastBestTime)*1000*60  , (Sol.GetScore() - startScore)/ (curTime-this.startTime)*1000*60 );
@@ -48,7 +52,7 @@ public class BestSolutionSynchro {
 			
 			BestSol = tmp;
 			
-			if((curTime-this.lastSave) > 30*1000)//30*1000)// Was a limit to a save to disk every 30 sec
+			if((curTime-this.lastSave) > 0*1000)//30*1000)// Was a limit to a save to disk every 30 sec
 			{
 				// Sol.SaveSolutionAsRaw("_BestSolutionInProcess.ser");
 				FullProcess.ProcessAllBackupOfSolutionToFolder(Sol);

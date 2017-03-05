@@ -61,6 +61,8 @@ public class Server implements Serializable {
 	
 	public double EvaluateGainAddingVideo(Video vid)
 	{
+
+		
 		double resp = 0;
 		// Evaluate Gain by adding the Video vid to this server
 		for(Request rq : pb.RequestForVideo.get(vid.ID))// Nendpoint iteration.  Could be optimized by using only the Endpoints with request for this video
@@ -118,18 +120,25 @@ public class Server implements Serializable {
 	
 
 	// Put video in server. 
-	public void PutVideoInCache(Video vid)
+	public boolean PutVideoInCache(Video vid)
 	{
 		// Get videoGain
 		VideoGain VG = AllVideoGains.get(vid.ID);
 		
 		// Update size
 		if(!VideosCached.contains(vid.ID))
-			sizeUsed = sizeUsed + vid.size;
-		if(sizeUsed > pb.X)
 		{
-			Sys.disp("ERROR, server overflow");
-			
+			sizeUsed = sizeUsed + vid.size;
+
+			if(sizeUsed > pb.X)
+			{
+			//	Sys.disp("ERROR, server overflow, refused insertion");
+				sizeUsed = sizeUsed - vid.size;
+				return false;
+			}
+		}else
+		{
+			return false;
 		}
 		
 		// Add video to server
@@ -150,12 +159,14 @@ public class Server implements Serializable {
 
 		// Update all VG scores for video
 		 updateAllServersVG( vid);
-		 
+			return true;
 	}
 	
 	
 	public void updateAllServersVG(Video vid)
 	{
+//		if(vid.ID==1973)
+//			Sys.disp("ID seen");
 		// Update Video Gain Score on all Servers (including this one)
 		for(Server s : pb.ServerList )
 		{
