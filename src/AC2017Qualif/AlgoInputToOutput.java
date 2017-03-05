@@ -62,8 +62,8 @@ public class AlgoInputToOutput implements  Runnable {
 		
 		SubProblems.add(pb);// Currently, no divide and conquer
 
-		int NSERVSUB = 5;// Optimize on around NSERVSUB servers at a time
-		int NITSUB = 30;
+		int NSERVSUB = 20;// Optimize on around NSERVSUB servers at a time
+		int NITSUB = 60;
 		
 		for( int nit = 0;nit<NIT;nit++)
 		{
