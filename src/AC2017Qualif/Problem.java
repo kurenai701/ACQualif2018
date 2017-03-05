@@ -3,6 +3,7 @@ package AC2017Qualif;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeSet;
 
 
 /*
@@ -70,7 +71,7 @@ public class Problem implements Serializable, Cloneable {
 	}
 	
 	// Create a new SubProblem, linked to existing problem
-	public Problem(Problem pb2, ArrayList<Server> ServerListSubpb){
+	public Problem(Problem pb2, TreeSet<Server> ServerListSubpb){
 
 		this.V = pb2.V;// (1 <= V <= 10000) - the number of videos
 		this.E= pb2.E;// (1 <= E <= 1000) - the number of endpoints

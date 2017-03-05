@@ -56,7 +56,7 @@ public class Solution implements Serializable, Cloneable {
 	 * Recomputes score from model
 	 * @return score of current solution
 	 */
-	private ScoreInfo GetScoreModel()
+	private ScoreInfo GetScoreModel(boolean detailLog)
 	{
 
 		// *******************************
@@ -85,7 +85,11 @@ public class Solution implements Serializable, Cloneable {
 				LC=req.curLatency;
 			}
 			
-			tempscore += (LD-LC)*req.Nreq*1000.0/pb.SR;
+			double gain =(LD-LC)*req.Nreq*1000.0/pb.SR  ;
+			tempscore += gain;
+			
+			if(detailLog)
+				Sys.disp("req " + req.ReqID + " gain : " + gain);
 		}	
 			
 //			// Compact server: give a bonus to have smaller server use
@@ -108,10 +112,15 @@ public class Solution implements Serializable, Cloneable {
 	
 	public double GetScore()
 	{
+		return GetScore(false);
+	}
+	
+	public double GetScore(boolean detailLog)
+	{
 //		if(curScore>-100)
 //			return curScore;
 		
-		ScoreInfo scoringInfo = this.GetScoreModel();
+		ScoreInfo scoringInfo = this.GetScoreModel(detailLog);
 		curScore = scoringInfo.score;
 		return scoringInfo.score;
 	}

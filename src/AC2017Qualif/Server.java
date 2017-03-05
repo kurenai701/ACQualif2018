@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class Server implements Serializable {
+public class Server implements Serializable, Comparable<Server> {
 	/**
 	 * 
 	 */
@@ -155,9 +155,13 @@ public class Server implements Serializable {
 		// Update affected RequestList
 		for(Request Rq : pb.RequestForVideo.get(vid.ID))// Nendpoint iteration.  Could be optimized by using only the Endpoints with request for this video
 		{
-			
-			Rq.curLatency = Math.min( Math.min(Rq.Latency2ExternalServer ,Rq.curLatency ), Rq.eP.Latency4ServerList.get(servID));
-			
+			 long thisLatency = Rq.eP.Latency4ServerList.get(servID);
+			 long latUpdate= Math.min( Math.min(Rq.Latency2ExternalServer ,Rq.curLatency ),thisLatency);
+			 Rq.curLatency = latUpdate;
+			 if( latUpdate ==  thisLatency)
+			 {
+				 Rq.curServer = servID;
+			 }
 		}
 		
 		// Remove from priority queue
@@ -209,6 +213,15 @@ public class Server implements Serializable {
 			}
 			
 		}
+	}
+
+
+
+
+	@Override
+	public int compareTo(Server o) {
+		// TODO Auto-generated method stub
+		return Integer.compare(this.servID, o.servID);
 	}
 	
 	

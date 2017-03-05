@@ -3,6 +3,7 @@ package AC2017Qualif;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.SplittableRandom;
+import java.util.TreeSet;
 
 
 public class AlgoInputToOutput implements  Runnable {
@@ -75,7 +76,7 @@ public class AlgoInputToOutput implements  Runnable {
 		
 			for(int subInd = 0; subInd<SubProblems.size();subInd++)
 			{
-				ArrayList<Server> ServerListSubpb = new ArrayList<>();
+				TreeSet<Server> ServerListSubpb = new TreeSet<>();
 				for(int nserv=0;nserv<NSERVSUB;nserv++)
 					ServerListSubpb.add( pb.ServerList.get(rand.nextInt(pb.ServerList.size())));
 				
@@ -108,10 +109,15 @@ public class AlgoInputToOutput implements  Runnable {
 						{
 							s.RemoveVideoFromCache(pb.VideoList.get(s.VideosCached.first()    ));
 						}
-						
+					}
+					for( Server Subs : SubSol.pb.ServerList)
+					{
+						Server s = pb.ServerList.get( Subs.originalServID);
 						// Put new videos
 						for( int vid : Subs.VideosCached)
 						{
+							if(vid==7)
+								Sys.disp("d");
 							boolean PutOk = s.PutVideoInCache(pb.VideoList.get(vid));
 							if(!PutOk)
 								Sys.disp("Error in put");
@@ -120,7 +126,7 @@ public class AlgoInputToOutput implements  Runnable {
 					}
 					Sol.curScore = -1000;
 					if(Sol.GetScore() != SubSol.GetScore())
-						Sys.disp("Error in Sol getback score,  expecte : " +SubSol.GetScore() + " got " + Sol.GetScore());
+						Sys.disp("Error in Sol getback score,  expecte : " +SubSol.GetScore(true) + " got " + Sol.GetScore(true));
 					
 				}
 				
@@ -235,7 +241,7 @@ public class AlgoInputToOutput implements  Runnable {
 			
 	
 	// Return a subProblem 
-	public Problem subProblem( Problem pb,ArrayList<Server> ServerListSubpb)
+	public Problem subProblem( Problem pb,TreeSet<Server> ServerListSubpb)
 	{
 			//TODO :create sub problem
 		Problem subP = new Problem(pb,ServerListSubpb);
