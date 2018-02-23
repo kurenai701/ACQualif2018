@@ -1,4 +1,4 @@
-package AC2017Qualif;
+package AC2018Qualif;
 
 import java.util.ArrayList;
 import java.util.HashMap;

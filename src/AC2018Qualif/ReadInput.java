@@ -1,4 +1,4 @@
-package AC2017Qualif;
+package AC2018Qualif;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -132,7 +132,6 @@ public class ReadInput {
 			
 		Sys.pln("input read done : pb created");
 		}
-	
 		
 		return pb;
 	}

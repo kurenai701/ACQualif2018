@@ -1,4 +1,4 @@
-package AC2017Qualif;
+package AC2018Qualif;
 
 import java.util.Scanner;
 import java.util.SplittableRandom;
@@ -14,11 +14,11 @@ public class FullProcess {
 
 		boolean RELOAD = true;
 	//	 Common.InputFileName = "kittens.in";  Problem.smallOffset = 150;//100=> 1024782; 70 => 1024619 50 => 1024364 0 => 1021680
-		 Common.InputFileName = "videos_worth_spreading.in";  Problem.smallOffset = 20; //20 => 608442
+	//	 Common.InputFileName = "videos_worth_spreading.in";  Problem.smallOffset = 20; //20 => 608442
 	//	 Common.InputFileName = "trending_today.in"; Problem.smallOffset =20; //RELOAD = false;//20 => 499984
 	//	Common.InputFileName = "me_at_the_zoo.in";Problem.smallOffset = 30;  RELOAD = false; // 10 => 507906
 		
-		// Common.InputFileName = "example.in";
+		Common.InputFileName = "example.in";
 
 	
 		Common.OutputGeneratedFileName = Common.InputFileName + ".out.txt";

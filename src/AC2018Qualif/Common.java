@@ -1,4 +1,4 @@
-package AC2017Qualif;
+package AC2018Qualif;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -16,7 +16,7 @@ public class Common {
 	public static final UtilFile FU = new UtilFile();
 
 
-	public static final String ACBaseFolderPath = "C:\\ACFile\\H2017Qualif\\";
+	public static final String ACBaseFolderPath = "C:\\ACFile\\HC2018Qualif\\ACqualif2018\\";
 	public static final String ACFileFolderPath = ACBaseFolderPath+"PROBLEM\\";
 
 
@@ -59,8 +59,8 @@ public class Common {
 	public static final String OutputGeneratedFileNameUnitTest = "UNITTESTOutputGenerated.txt";
 	public static final String OutputGeneratedFullPathUnitTest = ACFileFolderPath+OutputGeneratedFileNameUnitTest;
 
-	public static final String OutputGeneratedFileName = "OutputGenerated.txt";
-	public static final String OutputGeneratedFullPath = ACFileFolderPath+OutputGeneratedFileName; 	
+	public static String OutputGeneratedFileName = "OutputGenerated.txt";
+	public static String OutputGeneratedFullPath = ACFileFolderPath+OutputGeneratedFileName; 	
 
 
 

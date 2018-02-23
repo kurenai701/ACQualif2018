@@ -1,4 +1,4 @@
-package AC2017Qualif;
+package AC2018Qualif;
 /*
  * Code to Zip src Sources
  * http://stackoverflow.com/questions/15968883/how-to-zip-a-folder-itself-using-java

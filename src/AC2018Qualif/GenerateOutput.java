@@ -1,4 +1,4 @@
-package AC2017Qualif;
+package AC2018Qualif;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
@@ -20,12 +20,10 @@ public class GenerateOutput implements Serializable{
 		{
 			PrintWriter writer = Common.FU.CreateWriterFile(filePath, Common.OutputEncoding);
 			if (writer != null)
-			{
-				
+			{				
 				WriteOutputFileGenerationLogic(writer, sol);
 				writer.close();
 			}		
-			
 		}
 	}
 	
