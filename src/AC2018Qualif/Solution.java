@@ -24,7 +24,7 @@ public class Solution implements Serializable, Cloneable {
 	final double COEFCOMPACT = 0;//1e-11;
 		
 
-	
+/*	
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		Solution sup = (Solution)super.clone();
@@ -36,7 +36,7 @@ public class Solution implements Serializable, Cloneable {
 		return sup;
 	}
 	
-	
+	*/
 	public Solution(Problem pb) {
 		super();
 		this.pb = pb;	

@@ -46,7 +46,7 @@ public class Problem implements Serializable, Cloneable {
 //		SR = 0.0;
 	}
 	
-	@Override
+/*	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		
 		
@@ -68,7 +68,7 @@ public class Problem implements Serializable, Cloneable {
 		
 		return sup;	
 	
-	}
+	}*/
 	
 	// Create a new SubProblem, linked to existing problem
 	public Problem(Problem pb2){//, xxx parameters)
