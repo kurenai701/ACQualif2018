@@ -12,13 +12,9 @@ public class FullProcess {
 	 */
 	public static void main(String[] args) {
 
-		boolean RELOAD = true;
-	//	 Common.InputFileName = "kittens.in";  Problem.smallOffset = 150;//100=> 1024782; 70 => 1024619 50 => 1024364 0 => 1021680
-	//	 Common.InputFileName = "videos_worth_spreading.in";  Problem.smallOffset = 20; //20 => 608442
-	//	 Common.InputFileName = "trending_today.in"; Problem.smallOffset =20; //RELOAD = false;//20 => 499984
-	//	Common.InputFileName = "me_at_the_zoo.in";Problem.smallOffset = 30;  RELOAD = false; // 10 => 507906
-		
-		Common.InputFileName = "example.in";
+		boolean RELOAD = false;
+
+		Common.InputFileName = "example.in";//RELOAD = true;// set RELOAD to true to restart from saved state
 
 	
 		Common.OutputGeneratedFileName = Common.InputFileName + ".out.txt";
@@ -48,17 +44,13 @@ public class FullProcess {
 			BestSolutionSynchro BestSolSynch = new BestSolutionSynchro(startSol);
 			Alg = new AlgoInputToOutput(pbMod, rand, startSol, BestSolSynch, 0, 50);
 
-			sol = Alg.AlgoInit(pbMod, rand);
+			sol = Alg.AlgoInit(pbMod, rand);// Execute first algorithm to find initial solution
 
 			// return;//TODO
 
 			ProcessAllBackupOfSolutionToFolder(sol);
 		} else {
-			// sol =
-			// (Solution)(Common.FU.DeserializeFileToObject(Common.ACFileFolderPath
-			// + Common.InputFileName +
-			// "_BestSolutionInProcess.ser"));//0000671212_0330-2224\\SolutionSerialized.ser"
-			// ));
+
 
 			// REPROCESS INIT PROBLEM
 			Scanner scanIn = ri.ScannerInputFile(Common.InputFilePath);
@@ -80,9 +72,11 @@ public class FullProcess {
 		// ****** Solution Improver ATTENTION AUX PARAMETRES;
 		BestSolutionSynchro BestSolSynch = new BestSolutionSynchro(sol);
 		
+		
+		// Iterative improver
 		while (true) {
-			int NIT = 50;
-			int NPROC = 1;
+			int NIT = 50;// Number of iterate in subproblem
+			int NPROC = 1;// Number of processors/Threads used
 
 			Thread[] thL = new Thread[NPROC];
 			for (int i = 0; i < NPROC; i++) {
@@ -98,6 +92,7 @@ public class FullProcess {
 
 			}
 			boolean finished = false;
+			// Wait other threads to conclude to restart
 			while (!finished) {
 				finished = true;
 				try {
@@ -169,7 +164,7 @@ public class FullProcess {
 	}
 
 	public static void CheckSolution(Solution sol) {
-
+		// TODO: Write solution checker
 		// assert( (NT>=sol.pb.L && NM>=sol.pb.L));
 
 	}

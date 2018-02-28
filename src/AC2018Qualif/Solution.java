@@ -11,9 +11,8 @@ import java.io.Serializable;
 public class Solution implements Serializable, Cloneable {
 	public boolean improved = false;
 	
-	private static final long serialVersionUID = 420L;
+	private static final long serialVersionUID = 421L;
 	
-	// for concours : list of ballons and movements
 
 	double curScore; // current score
 	// TODO : Put solution HERE ****************************************
@@ -63,40 +62,7 @@ public class Solution implements Serializable, Cloneable {
 		// ** Recoputes score
 		//********************************
 		double tempscore = 0;
-		for(Request req :pb.RequestList)
-		{
-			double LD = req.eP.LD;// req.Latency2ExternalServer;
-			double LC = LD;
-			if(false)
-			{
-				for(Server s : pb.ServerList)
-				{
-					if(s.VideosCached.contains(req.V.ID))
-					{
-						LC = Math.min(LC, req.eP.Latency4ServerList.get(s.servID));
-					}
-				}
-				
-				if(LC!=req.curLatency)
-				{
-					Sys.disp("Error, curLatency of Endpoint not valid!!!");
-				}
-			}else{
-				LC=req.curLatency;
-			}
-			
-			double gain =(LD-LC)*req.Nreq*1000.0/pb.SR  ;
-			tempscore += gain;
-			
-			if(detailLog)
-				Sys.disp("req " + req.ReqID + " gain : " + gain);
-		}	
-			
-//			// Compact server: give a bonus to have smaller server use
-			for(Server s : pb.ServerList)
-			{
-				tempscore +=  1.0/(pb.X-s.sizeUsed+1.0)*COEFCOMPACT;// 1/x pent decrease with higher values
-			}	
+		// TODO :compute score of solution
 			
 			
 			
