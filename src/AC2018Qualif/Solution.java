@@ -89,7 +89,11 @@ public class Solution implements Serializable, Cloneable {
 	
 	public double GetScore()
 	{
-		return GetScore(false);
+        Sys.pln(Common.ScoreTot(this));
+		return Common.ScoreTot(this);
+		
+		
+	//	return GetScore(false);
 	}
 	
 	public double GetScore(boolean detailLog)

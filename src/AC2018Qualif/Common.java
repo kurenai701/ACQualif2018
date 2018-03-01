@@ -219,12 +219,15 @@ public class Common {
 		return sc;
 	}
 	
-	public static int ScoreMax(Solution sol)
+	public static int ScoreMaxNoBonus(Problem pb)
 	{
 		int sc = 0;
-		for (Ride r : sol.pb.Rides)
+		for (Ride r : pb.Rides)
 		{
-			sc += sol.pb.B + Dist(r);
+			if (r.id > 0)
+			{
+			sc += Dist(r); // sans pb.B
+			}
 		}
 		return sc;
 	}
