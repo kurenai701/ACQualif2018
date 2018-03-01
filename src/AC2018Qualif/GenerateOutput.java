@@ -52,12 +52,13 @@ public class GenerateOutput implements Serializable{
 		{
 			int nb_rides = c.RidesServed.size();
 			String buildLine = "";
-			buildLine += nb_rides;
+			buildLine += nb_rides - 1;
 			
 			for(Integer r : c.RidesServed)
 			{
 				if(r> 0)
 				{
+					r = r-1;
 					buildLine += " " + r;
 				}
 			}
