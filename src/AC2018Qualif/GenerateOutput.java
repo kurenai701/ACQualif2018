@@ -8,7 +8,18 @@ public class GenerateOutput implements Serializable{
 
 	
 
+	public static void main(String[] args) {
 
+		Problem pb = new Problem();
+        Solution s = new Solution(pb);        
+        GenerateOutput go = new GenerateOutput();
+        
+        go.GenerateOutputFileFromOutputModel(s, "C:\\ACFile\\test.txt");
+		
+		
+	}
+	
+	
 	public void GenerateOutputFileFromOutputModel(Solution sol, String filePath)
 	{
 		System.out.println("GenerateOutputFileFromOutputModel");
@@ -36,6 +47,8 @@ public class GenerateOutput implements Serializable{
 
 		Sys.disp("Generating Output");
 
+		writer.println("hohoho");
+		
 //		Predicate<Server> pred = s -> s.VideosCached.size() > 0;
 //		int count_used_servers = Common.Count(sol.pb.ServerList, pred);
 //		writer.println(count_used_servers);
