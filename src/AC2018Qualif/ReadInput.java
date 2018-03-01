@@ -35,6 +35,8 @@ public class ReadInput {
 			pb.B = scIn.nextInt();
 			pb.T = scIn.nextInt();
 
+			pb.Rides.add(new Ride(0,0,0,0,0,0,0,pb.T));
+			
 			for(int i=0; i< pb.N; i++){
 				int a = scIn.nextInt();
 				int b = scIn.nextInt();
@@ -43,7 +45,7 @@ public class ReadInput {
 				int s = scIn.nextInt();
 				int f = scIn.nextInt();
 				
-				pb.Rides.add(new Ride(a,b,x,y,s,f,i));
+				pb.Rides.add(new Ride(a,b,x,y,s,f,i+1,pb.T));
 			}			
 			
 //			pb.V = scIn.nextInt(); // nb videos
