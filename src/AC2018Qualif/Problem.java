@@ -28,6 +28,7 @@ public class Problem implements Serializable, Cloneable {
 	public int B;//Bonus 
 	public int T;//Time
 	
+	public ArrayList<Ride> Rides;
 	
 	//	static double smallOffset = 30;//Parameters to give a small boost to smaller videos
 //	public int V;// (1 <= V <= 10000) - the number of videos

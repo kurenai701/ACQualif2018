@@ -42,9 +42,9 @@ public class ReadInput {
 				int y = scIn.nextInt();
 				int s = scIn.nextInt();
 				int f = scIn.nextInt();
-			}
-			
-			
+				
+				pb.Rides.add(new Ride(a,b,x,y,s,f,i));
+			}			
 			
 //			pb.V = scIn.nextInt(); // nb videos
 //			pb.E = scIn.nextInt(); // nb endpoints
