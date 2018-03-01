@@ -186,7 +186,7 @@ public class Common {
 		int b = lastRide.y;
 		int x = newRide.a;
 		int y = newRide.b;
-		int tempsAR = distance(newRide) + Math.abs(x - a) + Math.abs(y - b);
+		int tempsAR = Dist(newRide) + Math.abs(x - a) + Math.abs(y - b);
 		if(tempsAR + T > newRide.f)
 		{
 			cond = false;
