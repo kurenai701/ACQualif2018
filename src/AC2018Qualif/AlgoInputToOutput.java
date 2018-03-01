@@ -244,8 +244,23 @@ public class AlgoInputToOutput implements  Runnable {
 				Sol.removeCar(idx);
 			}
 		}
-		Sol =  AlgoInit( subProb,  rand, Sol, ConsiderStart);
 		
+		int nRideToRemove = (int)(subProb.N*0.1);
+		boolean[] rideCoveredSave = Sol.RideServed.clone();
+		int[] listI = new int[nRideToRemove];
+		for(int i =0;i<nRideToRemove;i++)
+		{
+			int k=rand.nextInt(subProb.N);
+			listI[i]=k;
+			Sol.RideServed[k] = true;
+		}
+		
+		Sol =  AlgoInit( subProb,  rand, Sol, ConsiderStart);
+		for(int i =0;i<nRideToRemove;i++)
+		{
+			int k = listI[i];
+			Sol.RideServed[k] = rideCoveredSave[k];
+		}
 		
 		
 		return Sol;
