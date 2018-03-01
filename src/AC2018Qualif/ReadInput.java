@@ -27,8 +27,24 @@ public class ReadInput {
 			//  !!!!!!!!!!!!!!!!!!! //
 			// TODO	CODE here parsing of file, and saving to model	
 			//  !!!!!!!!!!!!!!!!!!! //
-					
 			pb = new Problem();
+			pb.R = scIn.nextInt();
+			pb.C = scIn.nextInt();
+			pb.F = scIn.nextInt();
+			pb.N = scIn.nextInt();
+			pb.B = scIn.nextInt();
+			pb.T = scIn.nextInt();
+
+			for(int i=0; i< pb.N; i++){
+				int a = scIn.nextInt();
+				int b = scIn.nextInt();
+				int x = scIn.nextInt();
+				int y = scIn.nextInt();
+				int s = scIn.nextInt();
+				int f = scIn.nextInt();
+				
+				pb.Rides.add(new Ride(a,b,x,y,s,f,i));
+			}			
 			
 //			pb.V = scIn.nextInt(); // nb videos
 //			pb.E = scIn.nextInt(); // nb endpoints
@@ -53,6 +69,20 @@ public class ReadInput {
 		
 		return pb;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 		
 	// If time, and if we want to verify that we have correct modeling

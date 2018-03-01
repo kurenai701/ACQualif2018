@@ -32,7 +32,6 @@ public class FullProcess {
 		Scanner scanInput = ri.ScannerInputFile(Common.InputFilePath);
 		Problem pbMod = ri.ProcessReadInputToModel(scanInput);
 
-		// TODO : find solution
 
 		// ****** Process Algorithm to find Solution
 		SplittableRandom rand = new SplittableRandom(42);//System.currentTimeMillis());
@@ -46,7 +45,6 @@ public class FullProcess {
 
 			sol = Alg.AlgoInit(pbMod, rand);// Execute first algorithm to find initial solution
 
-			// return;//TODO
 
 			ProcessAllBackupOfSolutionToFolder(sol);
 		} else {
@@ -75,7 +73,7 @@ public class FullProcess {
 		
 		// Iterative improver
 		while (true) {
-			int NIT = 50;// Number of iterate in subproblem
+			int NIT = 50;// Number of iterate in AlgoInputToOutput
 			int NPROC = 1;// Number of processors/Threads used
 
 			Thread[] thL = new Thread[NPROC];

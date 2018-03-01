@@ -1,5 +1,6 @@
 package AC2018Qualif;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.SplittableRandom;
@@ -269,10 +270,31 @@ public class AlgoInputToOutput implements  Runnable {
 		Solution resp = new Solution(pb);
 	// TODO : Compute initial condition
 		
+		// Foreach car, try to allocate the ride with the first starting time accessible, then iterate
+		// For each case, the car has a score, covered rides and time.
+		boolean finished = false;
+		
+		for(Car c : resp.Cars)
+		{
+			int R = FindClosestAccessibleRide(   c, resp.RideServed);//up to 10k   Would need better algo
+			
+			c.RidesServed.add(R);
+			resp.RideServed[R]= false;
+			
+		}
+		
+		
+		
 		return resp;
 	}
 
-	
+	int FindClosestAccessibleRide(Car c, boolean RideServed[], Problem pb)
+	{
+		int lastRide = c.RidesServed.get(c.RidesServed.size()-1);
 		
+		// Point pos =
+		
+	}
+	
 	
 }
