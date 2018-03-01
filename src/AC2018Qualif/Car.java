@@ -41,21 +41,29 @@ public class Car implements Serializable{
 	{
 		int sc = 0;
 		int ti = 0;
+		int a =0;
+		int b =0;
 		for(Integer r : this.RidesServed)
 		{
+			
 			if(r> 0)
 			{
 				Ride ri = pb.Rides.get(r);
-//				if(ti <= ri.s)
-//				{
-//					ti = ri.s;
-//					sc = sc + pb.B;
-//				}
-				ti = ti + Common.Dist(ri);
+				int x = ri.a;
+				int y = ri.b;
+				ti += Math.abs(x - a) + Math.abs(y - b);
+				if(ti <= ri.s)
+				{
+					ti = ri.s;
+					sc = sc + pb.B;
+				}
+				ti += Common.Dist(ri);
 				if(ti <= ri.f)
 				{
-					sc = sc + Common.Dist(ri);
+					sc += Common.Dist(ri);
 				}
+				a = ri.x;
+				b = ri.y;
 			}
 		}
 		return sc;
