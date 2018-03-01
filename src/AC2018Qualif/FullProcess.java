@@ -12,7 +12,7 @@ public class FullProcess {
 	 */
 	public static void main(String[] args) {
 
-		boolean RELOAD = false;
+		boolean RELOAD = true;
 		boolean ConsiderStart = false;
 //		Common.InputFileName = "a_example.in";//RELOAD = true;// set RELOAD to true to restart from saved state
 //		Common.InputFileName = "b_should_be_easy.in";//RELOAD = true;// set RELOAD to true to restart from saved state
@@ -152,8 +152,8 @@ public class FullProcess {
 		Common.FU.CreateDir(targetBKPFolderPath);
 
 		// Backup serialized solution class to BKP folder
-		//// sol.SaveSolutionAsRawToFullPath(targetBKPFolderPath+"\\"+
-		//// Common.SaveSerialFileName);
+		sol.SaveSolutionAsRawToFullPath(targetBKPFolderPath+"\\"+
+		 Common.SaveSerialFileName);
 
 		// Backup generated output
 		genOut.GenerateOutputFileFromOutputModel(sol, targetBKPFolderPath + "\\" + Common.OutputGeneratedFileName);
