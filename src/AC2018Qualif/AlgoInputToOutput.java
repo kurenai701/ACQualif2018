@@ -229,8 +229,20 @@ public class AlgoInputToOutput implements  Runnable {
 		//Solution subSol = new Solution(subProb);
 		Sol.curScore = -100;
 		
-		//TODO : implement solution
-		
+		// Remove a list of cars;
+		int nCareToRemove = 2;
+		boolean removedCar[] = new boolean[subProb.F];
+		while(nCareToRemove>0)
+		{
+			int idx = rand.nextInt(subProb.F);
+			if(!removedCar[idx])
+			{
+				nCareToRemove--;
+				removedCar[idx] = true;
+				Sol.removeCar(idx);
+			}
+		}
+		Sol =  AlgoInit( subProb,  rand, Sol);
 		
 		
 		
@@ -268,6 +280,13 @@ public class AlgoInputToOutput implements  Runnable {
 	public Solution AlgoInit(Problem pb, SplittableRandom rand)
 	{
 		Solution resp = new Solution(pb);
+		return AlgoInit( pb,  rand, resp);
+	}
+		
+		
+	public Solution AlgoInit(Problem pb, SplittableRandom rand,Solution resp)
+	{
+		
 	// TODO : Compute initial condition
 		
 		// Foreach car, try to allocate the ride with the first starting time accessible, then iterate
@@ -276,12 +295,13 @@ public class AlgoInputToOutput implements  Runnable {
 		
 		
 		// Essaye d'allouer les rides
+		boolean limitToStart = true;
 		while(!finished)
 		{ 
 			finished = true;
 			for(Car c : resp.Cars)
 			{
-				boolean limitToStart = false;
+				
 				if(!c.finished)
 				{
 					int rideIdx = FindClosestAccessibleRide(   c, resp.RideServed, pb, limitToStart,resp);//up to 10k   Would need better algo
@@ -295,7 +315,15 @@ public class AlgoInputToOutput implements  Runnable {
 						c.finished=true;
 					}
 				}
-				
+
+			}
+			if(finished && limitToStart)// first tried all starts
+			{
+				finished = false;
+				limitToStart = false;
+				for(Car c : resp.Cars){
+					c.finished = false;
+				}
 			}
 		}
 		
