@@ -169,6 +169,16 @@ public class Common {
 		return distance;
 	}
 	
+	public static int Dist(Ride lastRide, Ride newRide)
+	{
+		int a = lastRide.x;
+		int b = lastRide.y;
+		int x = newRide.a;
+		int y = newRide.b;
+		int tempsA = Math.abs(x - a) + Math.abs(y - b);
+		return tempsA;
+	}
+	
 	public static boolen IsRidable(Ride lastRide, Ride newRide, int T)
 	{
 		boolean cond = true;
