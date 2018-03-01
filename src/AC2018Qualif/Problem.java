@@ -3,6 +3,7 @@ package AC2018Qualif;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.SortedMap;
 import java.util.TreeSet;
 
 
@@ -28,7 +29,16 @@ public class Problem implements Serializable, Cloneable {
 	public int B;//Bonus 
 	public int T;//Time
 	
-	public ArrayList<Ride> Rides;
+	public ArrayList<Ride> Rides;	
+	
+	public SortedMap<Ride, Integer> sortedLastTimeForRideStarts;
+	
+	public void fillInSortedMap(){
+	    for(Ride ri : Rides)
+	    {
+	    	sortedLastTimeForRideStarts.put(ri, ri.lastTimeForRideStart());  
+	    }	
+	}
 	
 	//	static double smallOffset = 30;//Parameters to give a small boost to smaller videos
 //	public int V;// (1 <= V <= 10000) - the number of videos

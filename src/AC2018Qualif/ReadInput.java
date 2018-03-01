@@ -48,6 +48,8 @@ public class ReadInput {
 				pb.Rides.add(new Ride(a,b,x,y,s,f,i+1,pb.T));
 			}			
 			
+			pb.fillInSortedMap();
+			
 //			pb.V = scIn.nextInt(); // nb videos
 //			pb.E = scIn.nextInt(); // nb endpoints
 //			pb.R = scIn.nextInt(); // nb requests
