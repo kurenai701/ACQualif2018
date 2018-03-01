@@ -179,7 +179,7 @@ public class Common {
 		return tempsA;
 	}
 	
-	public static boolen IsRidable(Ride lastRide, Ride newRide, int T)
+	public static boolean IsRidable(Ride lastRide, Ride newRide, int T)
 	{
 		boolean cond = true;
 		int a = lastRide.x;
