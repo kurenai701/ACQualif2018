@@ -163,8 +163,41 @@ public class Common {
 		e.printStackTrace();
 	}
 	
+	public static int Dist(Ride r)
+	{
+		distance = Math.abs(r.x - r.a) + Math.abs(r.y - r.b);
+		return distance;
+	}
 	
-
+	public static boolen IsRidable(Ride lastRide, Ride newRide, int T)
+	{
+		boolean cond = true;
+		a = lastRide.x;
+		b = lastRide.y;
+		x = newRide.a;
+		y = newRide.b;
+		tempsAR = distance(newRide) + Math.abs(x - a) + Math.abs(y - b);
+		if(tempsAR + T > newRide.f)
+		{
+			cond = false;
+		}	
+		return cond;
+	}
+	
+	public static boolean IsStartRidable(Ride lastRide, Ride newRide, int T)
+	{
+		boolean cond = true;
+		a = lastRide.x;
+		b = lastRide.y;
+		x = newRide.a;
+		y = newRide.b;
+		tempsA = Math.abs(x - a) + Math.abs(y - b);
+		if(tempsA + T > newRide.s)
+		{
+			cond = false;
+		}
+		return cond;
+	}
 
 
 }

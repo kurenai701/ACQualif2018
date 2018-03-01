@@ -47,7 +47,22 @@ public class GenerateOutput implements Serializable{
 
 		Sys.disp("Generating Output");
 
-		writer.println("hohoho");
+		
+		for (Car c : sol.Cars)
+		{
+			int nb_rides = Common.Count(c.Rides);
+			String buildLine = "";
+			buildLine += nb_rides;
+			
+			for(Integer id_ride : c.Rides)
+			{
+				buildLine += " " + id_ride;
+			}
+			buildLine = buildLine.trim();
+
+			writer.println(buildLine);
+			Sys.disp(buildLine)
+		}
 		
 //		Predicate<Server> pred = s -> s.VideosCached.size() > 0;
 //		int count_used_servers = Common.Count(sol.pb.ServerList, pred);
