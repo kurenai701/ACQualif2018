@@ -93,22 +93,19 @@ public class Problem implements Serializable, Cloneable {
 	}*/
 	
 	// Create a new SubProblem, linked to existing problem
-	public Problem(Problem pb2){//, xxx parameters)
+	public Problem(Problem pb){//, xxx parameters)
 
-//		this.V = pb2.V;// (1 <= V <= 10000) - the number of videos
-//		this.E= pb2.E;// (1 <= E <= 1000) - the number of endpoints
-//		this.R= pb2.V;// (1 <= R <= 1000000) - the number of request descriptions
-//		this.C= pb2.C;// (1 <= C <= 1000) - the number of cache servers
-//		this.X= pb2.X;// (1 <= X <= 500000) - the capacity of each cache server in megabytes
-//
-//		this.SR = pb2.SR;// Total number of requested Videos
-//				
-//		// VideoList****************************
-//		this.VideoList = pb2.VideoList;// unchanged
-//		this.ServerList =new ArrayList<Server>();
+
+	 R=pb.R;//row 
+	C=pb.C;//col
+	F=pb.F;//fleet
+	 N=pb.N;//Number of rides 
+		B=pb.B;//Bonus 
+		T=pb.T;//Time
 		
+		 Rides=pb.Rides;	
 		
-		
+		sortedLastTimeForRideStarts=pb.sortedLastTimeForRideStarts;
 
 		
 	}

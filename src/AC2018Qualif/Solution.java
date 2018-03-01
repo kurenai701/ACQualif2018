@@ -106,22 +106,17 @@ public class Solution implements Serializable, Cloneable {
 		return scoringInfo.score;
 	}
 	
-	
-//	//Update score for video
-//	public UpdateScore(Video vid)
-//	{
-//		for(Request req :pb.RequestForVideo.get(vid.ID))
-//		{
-//			
-//			
-//		}
-//		
-//		for(Server s : pb.ServerList)
-//		{
-//			tempscore = tempscore +1.0/(pb.X-s.sizeUsed+1.0)*COEFCOMPACT;// 1/x pent decrease with higher values
-//		}	
-//		
-//	}
+	public void removeCar(int carIdx)
+	{
+		Car c = Cars.get(carIdx);
+		for(int RideIdx :c.RidesServed)
+		{
+			this.RideServed[RideIdx] = false;
+		}
+		c.lastRideTime = 0;
+		c.finished = false;
+		c.RidesServed = new ArrayList<Integer>();c.RidesServed.add(0);
+	}
 	
 	
 	public double PrintScore()
