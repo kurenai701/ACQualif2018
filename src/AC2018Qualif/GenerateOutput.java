@@ -51,13 +51,16 @@ public class GenerateOutput implements Serializable{
 		for (Car c : sol.Cars)
 		{
 			Predicate<Ride> pred = r -> true;
-			int nb_rides = Common.Count(c.Rides, pred);
+			int nb_rides = Common.Count(c.RidesServed, pred);
 			String buildLine = "";
 			buildLine += nb_rides;
 			
-			for(Integer r : c.Rides)
+			for(Integer r : c.RidesServed)
 			{
-				buildLine += " " + r.id;
+				if(r> 0)
+				{
+					buildLine += " " + r;
+				}
 			}
 			buildLine = buildLine.trim();
 
