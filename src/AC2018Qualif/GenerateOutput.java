@@ -50,7 +50,7 @@ public class GenerateOutput implements Serializable{
 		
 		for (Car c : sol.Cars)
 		{
-			Predicate<Ride> pred = r -> true;
+			Predicate<Integer> pred = r -> true;
 			int nb_rides = Common.Count(c.RidesServed, pred);
 			String buildLine = "";
 			buildLine += nb_rides;
@@ -65,7 +65,7 @@ public class GenerateOutput implements Serializable{
 			buildLine = buildLine.trim();
 
 			writer.println(buildLine);
-			Sys.disp(buildLine)
+			Sys.disp(buildLine);
 		}
 		
 //		Predicate<Server> pred = s -> s.VideosCached.size() > 0;
