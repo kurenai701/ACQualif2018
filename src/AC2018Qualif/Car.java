@@ -46,11 +46,11 @@ public class Car implements Serializable{
 			if(r> 0)
 			{
 				Ride ri = pb.Rides.get(r);
-				if(ti <= ri.s)
-				{
-					ti = ri.s;
-					sc = sc + pb.B;
-				}
+//				if(ti <= ri.s)
+//				{
+//					ti = ri.s;
+//					sc = sc + pb.B;
+//				}
 				ti = ti + Common.Dist(ri);
 				if(ti <= ri.f)
 				{
