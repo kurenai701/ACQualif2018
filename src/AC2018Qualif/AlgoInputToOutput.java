@@ -177,12 +177,12 @@ public class AlgoInputToOutput implements  Runnable {
 						double sc = subSol.GetScore();
 						System.out.println("");
 						System.out.println("SUB   Id" + cf_id + " Params :" + "new Best Finished complicatedalgo Score : " +sc);
-						BestSolSynchroSub.StoreNewBestSolution(subSol,false);
+						BestSolSynchroSub.StoreNewBestSolution(subSol,true);
 							
 					}else
 					{
 						System.out.println("Better compactness");
-						BestSolSynchroSub.StoreNewBestSolution(subSol,false);
+						BestSolSynchroSub.StoreNewBestSolution(subSol,true);
 					}
 					bestScore = subSol.GetScore();
 					subSol.improved =false;
@@ -232,7 +232,7 @@ public class AlgoInputToOutput implements  Runnable {
 		Sol.curScore = -100;
 		
 		// Remove a list of cars;
-		int nCareToRemove = 2;
+		int nCareToRemove = 5;
 		boolean removedCar[] = new boolean[subProb.F];
 		while(nCareToRemove>0)
 		{
@@ -245,7 +245,11 @@ public class AlgoInputToOutput implements  Runnable {
 			}
 		}
 		
-		int nRideToRemove = (int)(subProb.N*0.1);
+		int nRideToRemove = (int)(subProb.N*0.05);
+		
+		
+		
+		
 		boolean[] rideCoveredSave = Sol.RideServed.clone();
 		int[] listI = new int[nRideToRemove];
 		for(int i =0;i<nRideToRemove;i++)
