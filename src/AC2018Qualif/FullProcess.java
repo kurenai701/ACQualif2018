@@ -51,6 +51,7 @@ public class FullProcess {
 
 
 			ProcessAllBackupOfSolutionToFolder(sol);
+			return;
 		} else {
 
 
