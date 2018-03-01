@@ -13,12 +13,12 @@ public class FullProcess {
 	public static void main(String[] args) {
 
 		boolean RELOAD = false;
-
+		boolean ConsiderStart = false;
 //		Common.InputFileName = "a_example.in";//RELOAD = true;// set RELOAD to true to restart from saved state
 		Common.InputFileName = "b_should_be_easy.in";//RELOAD = true;// set RELOAD to true to restart from saved state
 //		Common.InputFileName = "c_no_hurry.in";//RELOAD = true;// set RELOAD to true to restart from saved state
 //		Common.InputFileName = "d_metropolis.in";//RELOAD = true;// set RELOAD to true to restart from saved state
-//		Common.InputFileName = "e_high_bonus.in";//RELOAD = true;// set RELOAD to true to restart from saved state
+//		Common.InputFileName = "e_high_bonus.in";ConsiderStart = true;//RELOAD = true;// set RELOAD to true to restart from saved state
 
 	
 		Common.OutputGeneratedFileName = Common.InputFileName + ".out.txt";
@@ -45,9 +45,9 @@ public class FullProcess {
 			Solution startSol = new Solution(pbMod);
 			MutableDouble BestScoreOut = new MutableDouble(0);
 			BestSolutionSynchro BestSolSynch = new BestSolutionSynchro(startSol);
-			Alg = new AlgoInputToOutput(pbMod, rand, startSol, BestSolSynch, 0, 50);
+			Alg = new AlgoInputToOutput(pbMod, rand, startSol, BestSolSynch, 0, 50,ConsiderStart);
 
-			sol = Alg.AlgoInit(pbMod, rand);// Execute first algorithm to find initial solution
+			sol = Alg.AlgoInit(pbMod, rand,ConsiderStart);// Execute first algorithm to find initial solution
 
 
 			ProcessAllBackupOfSolutionToFolder(sol);
@@ -88,7 +88,7 @@ public class FullProcess {
 
 				indivSol.pb = pbMod;
 
-				Runnable indivAlg = new AlgoInputToOutput(pbMod, indivrand, indivSol, BestSolSynch, i, NIT);
+				Runnable indivAlg = new AlgoInputToOutput(pbMod, indivrand, indivSol, BestSolSynch, i, NIT,ConsiderStart);
 				Thread thread = new Thread(indivAlg);
 				thread.start();
 				thL[i] = thread;

@@ -16,8 +16,9 @@ public class AlgoInputToOutput implements  Runnable {
 	private  BestSolutionSynchro cf_BestSolSynchro ;
 	private  int cf_id;
 	private int NIT;
+	private boolean ConsiderStart;
 	
-	public AlgoInputToOutput(Problem cf_pb, SplittableRandom cf_rand, Solution cf_Sol, BestSolutionSynchro cf_BestSolSynchro, int cf_id,  int cf_NIT) {
+	public AlgoInputToOutput(Problem cf_pb, SplittableRandom cf_rand, Solution cf_Sol, BestSolutionSynchro cf_BestSolSynchro, int cf_id,  int cf_NIT,boolean considerStart) {
 		super();
 		this.cf_id = cf_id;
 		this.cf_pb = cf_pb;
@@ -25,6 +26,7 @@ public class AlgoInputToOutput implements  Runnable {
 		this.cf_Sol = cf_Sol;
 		this.cf_BestSolSynchro = cf_BestSolSynchro;
 		this.NIT = cf_NIT;
+		this.ConsiderStart = considerStart;
 
 	}
 	
@@ -36,14 +38,14 @@ public class AlgoInputToOutput implements  Runnable {
 
 	@Override
 	public void run()	{
-		DivideAndConquer(cf_pb, cf_rand, cf_Sol,cf_BestSolSynchro,NIT);
+		DivideAndConquer(cf_pb, cf_rand, cf_Sol,cf_BestSolSynchro,NIT, ConsiderStart);
 
 	}
 
 	
 	
 	
-	public Solution DivideAndConquer(Problem pb, SplittableRandom rand, Solution Sol,BestSolutionSynchro BestSolSynchro, int NIT )
+	public Solution DivideAndConquer(Problem pb, SplittableRandom rand, Solution Sol,BestSolutionSynchro BestSolSynchro, int NIT,boolean ConsiderStart )
 	{
 		
 		
@@ -86,7 +88,7 @@ public class AlgoInputToOutput implements  Runnable {
 					Sys.disp("Error in subsol score");
 				
 				// ***********************  Call optimisation on subproblem *************************************
-				SubSol= IterativelyResolveSubProblem(subProb,SubSol,rand,BestSolSynchroSub, NITSUB);
+				SubSol= IterativelyResolveSubProblem(subProb,SubSol,rand,BestSolSynchroSub, NITSUB, ConsiderStart);
 				
 				Sol.curScore = -1000;SubSol.curScore=-1000;
 				Sys.disp("After iteration : Full Sol score :" + Sol.GetScore() + "  subScore : " + SubSol.GetScore());
@@ -152,7 +154,7 @@ public class AlgoInputToOutput implements  Runnable {
 	}
 			
 			
-			private Solution IterativelyResolveSubProblem(Problem subProb, Solution subSol, SplittableRandom rand, BestSolutionSynchro BestSolSynchroSub, int NITSUB)
+			private Solution IterativelyResolveSubProblem(Problem subProb, Solution subSol, SplittableRandom rand, BestSolutionSynchro BestSolSynchroSub, int NITSUB,boolean ConsiderStart)
 			{
 				double pRestart = 0.9;
 				
@@ -163,7 +165,7 @@ public class AlgoInputToOutput implements  Runnable {
 				{
 				
 				
-				subSol= ResolveSubProblem(subProb,subSol,rand);
+				subSol= ResolveSubProblem(subProb,subSol,rand, ConsiderStart);
 				
 				
 				if(subSol.GetScore()>bestScore ||  (subSol.GetScore()==bestScore && subSol.improved ==true))
@@ -223,7 +225,7 @@ public class AlgoInputToOutput implements  Runnable {
 	
 	
 
-	public Solution ResolveSubProblem( Problem subProb, Solution Sol,  SplittableRandom rand)
+	public Solution ResolveSubProblem( Problem subProb, Solution Sol,  SplittableRandom rand,boolean ConsiderStart)
 	{
 
 		//Solution subSol = new Solution(subProb);
@@ -242,7 +244,7 @@ public class AlgoInputToOutput implements  Runnable {
 				Sol.removeCar(idx);
 			}
 		}
-		Sol =  AlgoInit( subProb,  rand, Sol);
+		Sol =  AlgoInit( subProb,  rand, Sol, ConsiderStart);
 		
 		
 		
@@ -277,14 +279,14 @@ public class AlgoInputToOutput implements  Runnable {
 	
 	
 	// Algorithm used to find initial best solution
-	public Solution AlgoInit(Problem pb, SplittableRandom rand)
+	public Solution AlgoInit(Problem pb, SplittableRandom rand,boolean ConsiderStart)
 	{
 		Solution resp = new Solution(pb);
-		return AlgoInit( pb,  rand, resp);
+		return AlgoInit( pb,  rand, resp, ConsiderStart);
 	}
 		
 		
-	public Solution AlgoInit(Problem pb, SplittableRandom rand,Solution resp)
+	public Solution AlgoInit(Problem pb, SplittableRandom rand,Solution resp, boolean ConsiderStart)
 	{
 		
 	// TODO : Compute initial condition
@@ -295,28 +297,30 @@ public class AlgoInputToOutput implements  Runnable {
 		
 		
 		// Essaye d'allouer les rides
-		boolean limitToStart = true;
+		boolean limitToStart = ConsiderStart;
 		while(!finished)
 		{ 
 			finished = true;
-			for(Car c : resp.Cars)
-			{
-				
-				if(!c.finished)
+
+				for(Car c : resp.Cars)
 				{
-					int rideIdx = FindClosestAccessibleRide(   c, resp.RideServed, pb, limitToStart,resp);//up to 10k   Would need better algo
-					if(rideIdx!=0)
+					
+					if(!c.finished)
 					{
-						c.addRide(rideIdx,pb);
-						resp.RideServed[rideIdx]= true;
-						finished = false;
-					}else
-					{
-						c.finished=true;
+						int rideIdx = FindClosestAccessibleRide(   c, resp.RideServed, pb, limitToStart,resp,ConsiderStart);//up to 10k   Would need better algo
+						if(rideIdx!=0)
+						{
+							c.addRide(rideIdx,pb);
+							resp.RideServed[rideIdx]= true;
+							finished = false;
+						}else
+						{
+							c.finished=true;
+						}
 					}
+	
 				}
 
-			}
 			if(finished && limitToStart)// first tried all starts
 			{
 				finished = false;
@@ -332,27 +336,30 @@ public class AlgoInputToOutput implements  Runnable {
 		return resp;
 	}
 
-	int FindClosestAccessibleRide(Car c, boolean RideServed[], Problem pb, boolean limitToStart, Solution sol)
+	int FindClosestAccessibleRide(Car c, boolean RideServed[], Problem pb, boolean limitToStart, Solution sol, boolean ConsiderStart)
 	{
 		int lastRideIdx = c.RidesServed.get(c.RidesServed.size()-1);
 		Point pos ;
 		Ride lastRide = pb.Rides.get(lastRideIdx);
 
 		int bestRideIdx = 0;
-		// FIrst try to match start
-		for(Ride ri : pb.Rides )
+		if(ConsiderStart)
 		{
-			if(!sol.RideServed[ri.id] &&  Common.IsStartRidable( lastRide, ri, c.lastRideTime ) )
+			// FIrst try to match start
+			for(Ride ri : pb.Rides )
 			{
-				if(bestRideIdx == 0 || pb.Rides.get(bestRideIdx).s > ri.s  )
+				if(!sol.RideServed[ri.id] &&  Common.IsStartRidable( lastRide, ri, c.lastRideTime ) )
 				{
-					bestRideIdx = ri.id;
+					if(bestRideIdx == 0 || pb.Rides.get(bestRideIdx).s > ri.s  )
+					{
+						bestRideIdx = ri.id;
+					}
 				}
 			}
-		}
-		if(bestRideIdx != 0)
-		{
-			return bestRideIdx;
+			if(bestRideIdx != 0)
+			{
+				return bestRideIdx;
+			}
 		}
 		// Else try to match closest
 		if(!limitToStart)
