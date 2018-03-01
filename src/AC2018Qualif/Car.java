@@ -31,4 +31,28 @@ public class Car {
 							+ Common.Dist(pb.Rides.get(RidesServed.get(RidesServed.size()-1)), pb.Rides.get(rideIdx));
 	
 	}
+	
+	public int score(Problem pb)
+	{
+		int sc = 0;
+		int ti = 0;
+		for(Integer r : this.RidesServed)
+		{
+			if(r> 0)
+			{
+				Ride ri = pb.Rides.get(r);
+				if(ti <= ri.s)
+				{
+					ti = ri.s;
+					sc = sc + pb.B;
+				}
+				ti = ti + Common.Dist(ri);
+				if(ti <= ri.f)
+				{
+					sc = sc + Common.Dist(ri);
+				}
+			}
+		}
+		return sc;
+	}
 }
