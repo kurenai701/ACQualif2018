@@ -12,9 +12,11 @@ public class Ride {
 	public int s; // earliest start time
 	public int f; // latest finish time
 
+	public int T; // pb.T
+	
 	public Ride() {}
 	
-	public Ride(int a, int b, int x, int y, int s, int f, int id)
+	public Ride(int a, int b, int x, int y, int s, int f, int id, int T)
 	{
 	    this.a = a;
 	    this.b = b;
@@ -23,6 +25,12 @@ public class Ride {
 	    this.s = s;
 	    this.f = f;
 	    this.id = id;
+	    this.T= T;
 	}
 	
+	
+	public int lastTimeForRideStart()
+	{
+		return T - Common.Dist(this);
+	}
 }
