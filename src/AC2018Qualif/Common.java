@@ -218,5 +218,15 @@ public class Common {
 		}
 		return sc;
 	}
+	
+	public static int ScoreMax(Solution sol)
+	{
+		int sc = 0;
+		for (Ride r : sol.pb.Rides)
+		{
+			sc += sol.pb.B + Dist(r);
+		}
+		return sc;
+	}
 
 }
