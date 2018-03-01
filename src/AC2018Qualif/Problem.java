@@ -64,6 +64,8 @@ public class Problem implements Serializable, Cloneable {
 //		this.RequestList = new ArrayList<Request>();
 //		this.RequestForVideo = new HashMap<>();
 //		SR = 0.0;
+		this.Rides = new ArrayList<>();
+		
 	}
 	
 /*	@Override
