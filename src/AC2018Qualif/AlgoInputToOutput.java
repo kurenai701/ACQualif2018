@@ -272,18 +272,19 @@ public class AlgoInputToOutput implements  Runnable {
 		
 		// Foreach car, try to allocate the ride with the first starting time accessible, then iterate
 		// For each case, the car has a score, covered rides and time.
-		boolean finished = true;
+		boolean finished = false	;
 		
 		
 		// Essaye d'allouer les rides
 		while(!finished)
 		{ 
+			finished = true;
 			for(Car c : resp.Cars)
 			{
 				boolean limitToStart = false;
 				if(!c.finished)
 				{
-					int rideIdx = FindClosestAccessibleRide(   c, resp.RideServed, pb, limitToStart);//up to 10k   Would need better algo
+					int rideIdx = FindClosestAccessibleRide(   c, resp.RideServed, pb, limitToStart,resp);//up to 10k   Would need better algo
 					if(rideIdx!=0)
 					{
 						c.addRide(rideIdx,pb);
@@ -303,7 +304,7 @@ public class AlgoInputToOutput implements  Runnable {
 		return resp;
 	}
 
-	int FindClosestAccessibleRide(Car c, boolean RideServed[], Problem pb, boolean limitToStart)
+	int FindClosestAccessibleRide(Car c, boolean RideServed[], Problem pb, boolean limitToStart, Solution sol)
 	{
 		int lastRideIdx = c.RidesServed.get(c.RidesServed.size()-1);
 		Point pos ;
@@ -313,7 +314,7 @@ public class AlgoInputToOutput implements  Runnable {
 		// FIrst try to match start
 		for(Ride ri : pb.Rides )
 		{
-			if(Common.IsStartRidable( lastRide, ri, c.lastRideTime ) )
+			if(!sol.RideServed[ri.id] &&  Common.IsStartRidable( lastRide, ri, c.lastRideTime ) )
 			{
 				if(bestRideIdx == 0 || pb.Rides.get(bestRideIdx).s > ri.s  )
 				{
@@ -321,7 +322,7 @@ public class AlgoInputToOutput implements  Runnable {
 				}
 			}
 		}
-		if(bestRideIdx != -1)
+		if(bestRideIdx != 0)
 		{
 			return bestRideIdx;
 		}
@@ -330,7 +331,7 @@ public class AlgoInputToOutput implements  Runnable {
 		{
 			for(Ride ri : pb.Rides )
 			{
-				if(Common.IsRidable( lastRide, ri, c.lastRideTime ) )
+				if(!sol.RideServed[ri.id] && Common.IsRidable( lastRide, ri, c.lastRideTime ) )
 				{
 					if(bestRideIdx == 0 || pb.Rides.get(bestRideIdx).s > ri.s  )
 					{
