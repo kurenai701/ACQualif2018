@@ -283,10 +283,10 @@ public class AlgoInputToOutput implements  Runnable {
 				boolean limitToStart = false;
 				if(!c.finished)
 				{
-					int rideIdx = FindClosestAccessibleRide(   c, resp.RideServed, limitToStart);//up to 10k   Would need better algo
+					int rideIdx = FindClosestAccessibleRide(   c, resp.RideServed, pb, limitToStart);//up to 10k   Would need better algo
 					if(rideIdx!=0)
 					{
-						c.addRide(rideIdx);
+						c.addRide(rideIdx,pb);
 						resp.RideServed[rideIdx]= true;
 						finished = false;
 					}else
@@ -313,11 +313,11 @@ public class AlgoInputToOutput implements  Runnable {
 		// FIrst try to match start
 		for(Ride ri : pb.Rides )
 		{
-			if(Common.isStartRidable( lastRide, ri, c.lastRideTime ) )
+			if(Common.IsStartRidable( lastRide, ri, c.lastRideTime ) )
 			{
 				if(bestRideIdx == 0 || pb.Rides.get(bestRideIdx).s > ri.s  )
 				{
-					bestRideIdx = ri.idx;
+					bestRideIdx = ri.id;
 				}
 			}
 		}
@@ -330,11 +330,11 @@ public class AlgoInputToOutput implements  Runnable {
 		{
 			for(Ride ri : pb.Rides )
 			{
-				if(Common.isRidable( lastRide, ri, c.lastRideTime ) )
+				if(Common.IsRidable( lastRide, ri, c.lastRideTime ) )
 				{
 					if(bestRideIdx == 0 || pb.Rides.get(bestRideIdx).s > ri.s  )
 					{
-						bestRideIdx = ri.idx;
+						bestRideIdx = ri.id;
 					}
 				}
 			}
