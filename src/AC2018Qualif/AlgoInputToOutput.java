@@ -66,7 +66,7 @@ public class AlgoInputToOutput implements  Runnable {
 		
 		SubProblems.add(pb);// Currently, no divide and conquer// TODO : If creating subproblem, update this line
 
-		int NITSUB = 60;// Number of iteration for each subproblem
+		int NITSUB = 60000;// Number of iteration for each subproblem
 		
 		for( int nit = 0;nit<NIT;nit++)
 		{
@@ -156,7 +156,7 @@ public class AlgoInputToOutput implements  Runnable {
 			
 			private Solution IterativelyResolveSubProblem(Problem subProb, Solution subSol, SplittableRandom rand, BestSolutionSynchro BestSolSynchroSub, int NITSUB,boolean ConsiderStart)
 			{
-				double pRestart = 0.9;
+				double pRestart = 1;
 				
 				double bestScore = subSol.GetScore();
 				double firstScore = bestScore;
@@ -232,7 +232,7 @@ public class AlgoInputToOutput implements  Runnable {
 		Sol.curScore = -100;
 		
 		// Remove a list of cars;
-		int nCareToRemove = 5;
+		int nCareToRemove = 1;//(int)(subProb.F*0.1);
 		boolean removedCar[] = new boolean[subProb.F];
 		while(nCareToRemove>0)
 		{
@@ -245,8 +245,11 @@ public class AlgoInputToOutput implements  Runnable {
 			}
 		}
 		
-		int nRideToRemove = (int)(subProb.N*0.05);
-		
+		int nRideToRemove = (int)(subProb.N*0.1);
+		if(rand.nextDouble()<0.2)
+		{
+			nRideToRemove=0;
+		}
 		
 		
 		
@@ -326,7 +329,7 @@ public class AlgoInputToOutput implements  Runnable {
 					
 					if(!c.finished)
 					{
-						int rideIdx = FindClosestAccessibleRide(   c, resp.RideServed, pb, limitToStart,resp,ConsiderStart);//up to 10k   Would need better algo
+						int rideIdx = FindClosestAccessibleRide(   c, resp.RideServed, pb, limitToStart,resp,ConsiderStart,rand);//up to 10k   Would need better algo
 						if(rideIdx!=0)
 						{
 							c.addRide(rideIdx,pb);
@@ -355,12 +358,13 @@ public class AlgoInputToOutput implements  Runnable {
 		return resp;
 	}
 
-	int FindClosestAccessibleRide(Car c, boolean RideServed[], Problem pb, boolean limitToStart, Solution sol, boolean ConsiderStart)
+	int FindClosestAccessibleRide(Car c, boolean RideServed[], Problem pb, boolean limitToStart, Solution sol, boolean ConsiderStart,SplittableRandom rand)
 	{
 		int lastRideIdx = c.RidesServed.get(c.RidesServed.size()-1);
 		Point pos ;
 		Ride lastRide = pb.Rides.get(lastRideIdx);
-
+		double pbkeep = 0.9;
+		int bestDist = Integer.MAX_VALUE;
 		int bestRideIdx = 0;
 		if(ConsiderStart)
 		{
@@ -369,7 +373,7 @@ public class AlgoInputToOutput implements  Runnable {
 			{
 				if(!sol.RideServed[ri.id] &&  Common.IsStartRidable( lastRide, ri, c.lastRideTime ) )
 				{
-					if(bestRideIdx == 0 || pb.Rides.get(bestRideIdx).s > ri.s  )
+					if(bestRideIdx == 0 || (pb.Rides.get(bestRideIdx).f > ri.f  && rand.nextDouble()<pbkeep) )
 					{
 						bestRideIdx = ri.id;
 					}
@@ -387,9 +391,10 @@ public class AlgoInputToOutput implements  Runnable {
 			{
 				if(!sol.RideServed[ri.id] && Common.IsRidable( lastRide, ri, c.lastRideTime ) )
 				{
-					if(bestRideIdx == 0 || pb.Rides.get(bestRideIdx).s > ri.s  )
+					if(bestRideIdx == 0 || (pb.Rides.get(bestRideIdx).f > ri.f && rand.nextDouble()<pbkeep) )
 					{
 						bestRideIdx = ri.id;
+						bestDist = Common.Dist(ri,lastRide);
 					}
 				}
 			}

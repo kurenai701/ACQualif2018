@@ -16,8 +16,8 @@ public class FullProcess {
 		boolean ConsiderStart = false;
 //		Common.InputFileName = "a_example.in";//RELOAD = true;// set RELOAD to true to restart from saved state
 //		Common.InputFileName = "b_should_be_easy.in";//RELOAD = true;// set RELOAD to true to restart from saved state
-//		Common.InputFileName = "c_no_hurry.in";//RELOAD = true;// set RELOAD to true to restart from saved state
-		Common.InputFileName = "d_metropolis.in";ConsiderStart=true;//RELOAD = true;// set RELOAD to true to restart from saved state
+		Common.InputFileName = "c_no_hurry.in";//RELOAD = true;// set RELOAD to true to restart from saved state
+//		Common.InputFileName = "d_metropolis.in";ConsiderStart=true;//RELOAD = true;// set RELOAD to true to restart from saved state
 //		Common.InputFileName = "e_high_bonus.in";ConsiderStart = true;//RELOAD = true;// set RELOAD to true to restart from saved state
 
 	
@@ -78,7 +78,7 @@ public class FullProcess {
 		
 		// Iterative improver
 		while (true) {
-			int NIT = 50;// Number of iterate in AlgoInputToOutput
+			int NIT = 5000;// Number of iterate in AlgoInputToOutput
 			int NPROC = 1;// Number of processors/Threads used
 
 			Thread[] thL = new Thread[NPROC];
