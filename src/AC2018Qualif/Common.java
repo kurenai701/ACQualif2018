@@ -209,5 +209,14 @@ public class Common {
 		return cond;
 	}
 
+	public static int ScoreTot(Solution sol)
+	{
+		int sc = 0;
+		for (Car c : sol.Cars)
+		{
+			sc += c.score(sol.pb);
+		}
+		return sc;
+	}
 
 }
