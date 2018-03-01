@@ -1,7 +1,13 @@
 package AC2018Qualif;
 
-public class Ride {
+import java.io.Serializable;
 
+public class Ride implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 825431538102847461L;
 	public int id;
 	public int a; // start row
 	public int b; // start col

@@ -39,7 +39,7 @@ public class BestSolutionSynchro {
 	{
 		FullProcess.CheckSolution(Sol);
 		double margin = 0.0;
-		if(Sol.GetScore() > BestSol.GetScore()+margin ||  (Sol.GetScore()==BestSol.GetScore()+margin && Sol.improved ==true))// todo : to adapt
+		if(true)//Sol.GetScore() > BestSol.GetScore()+margin ||  (Sol.GetScore()==BestSol.GetScore()+margin && Sol.improved ==true))// todo : to adapt
 		{
 			double curTime = System.currentTimeMillis();
 			System.out.printf("BestSolution update, gain/min from last: %04.2f  || gain/minute total: %04.2f \n" ,(Sol.GetScore() - BestSol.GetScore())/ (curTime-this.lastBestTime)*1000*60  , (Sol.GetScore() - startScore)/ (curTime-this.startTime)*1000*60 );

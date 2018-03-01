@@ -1,8 +1,13 @@
 package AC2018Qualif;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Car {
+public class Car implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2313261149009936617L;
 	ArrayList<Integer> RidesServed;
 	int lastRideTime;
 	boolean finished;
