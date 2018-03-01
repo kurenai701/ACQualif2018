@@ -1,6 +1,7 @@
 package AC2018Qualif;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /*
  * This class stores a solution. It is serializable for storage to file.
@@ -18,6 +19,9 @@ public class Solution implements Serializable, Cloneable {
 	// TODO : Put solution HERE ****************************************
 	// Solution is stored in problem
 		Problem pb;	
+		ArrayList<Car> Cars;
+		boolean RideServed[];
+		
 					
 	//************************************************************
 	
@@ -41,6 +45,13 @@ public class Solution implements Serializable, Cloneable {
 		super();
 		this.pb = pb;	
 		this.curScore = -1000;
+		this.Cars = new ArrayList<Car>();
+		for(int i=0;i<pb.F;i++)
+		{
+			this.Cars.add(new Car(pb.N));
+		}
+		this.RideServed = new boolean[pb.N];	
+		
 	}
 	
 	
