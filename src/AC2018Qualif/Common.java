@@ -165,18 +165,18 @@ public class Common {
 	
 	public static int Dist(Ride r)
 	{
-		distance = Math.abs(r.x - r.a) + Math.abs(r.y - r.b);
+		int distance = Math.abs(r.x - r.a) + Math.abs(r.y - r.b);
 		return distance;
 	}
 	
 	public static boolen IsRidable(Ride lastRide, Ride newRide, int T)
 	{
 		boolean cond = true;
-		a = lastRide.x;
-		b = lastRide.y;
-		x = newRide.a;
-		y = newRide.b;
-		tempsAR = distance(newRide) + Math.abs(x - a) + Math.abs(y - b);
+		int a = lastRide.x;
+		int b = lastRide.y;
+		int x = newRide.a;
+		int y = newRide.b;
+		int tempsAR = distance(newRide) + Math.abs(x - a) + Math.abs(y - b);
 		if(tempsAR + T > newRide.f)
 		{
 			cond = false;
@@ -187,11 +187,11 @@ public class Common {
 	public static boolean IsStartRidable(Ride lastRide, Ride newRide, int T)
 	{
 		boolean cond = true;
-		a = lastRide.x;
-		b = lastRide.y;
-		x = newRide.a;
-		y = newRide.b;
-		tempsA = Math.abs(x - a) + Math.abs(y - b);
+		int a = lastRide.x;
+		int b = lastRide.y;
+		int x = newRide.a;
+		int y = newRide.b;
+		int tempsA = Math.abs(x - a) + Math.abs(y - b);
 		if(tempsA + T > newRide.s)
 		{
 			cond = false;
