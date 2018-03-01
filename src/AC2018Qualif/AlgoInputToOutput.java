@@ -272,15 +272,30 @@ public class AlgoInputToOutput implements  Runnable {
 		
 		// Foreach car, try to allocate the ride with the first starting time accessible, then iterate
 		// For each case, the car has a score, covered rides and time.
-		boolean finished = false;
+		boolean finished = true;
 		
-		for(Car c : resp.Cars)
-		{
-			int R = FindClosestAccessibleRide(   c, resp.RideServed);//up to 10k   Would need better algo
-			
-			c.RidesServed.add(R);
-			resp.RideServed[R]= false;
-			
+		
+		// Essaye d'allouer les rides
+		while(!finished)
+		{ 
+			for(Car c : resp.Cars)
+			{
+				boolean limitToStart = false;
+				if(!c.finished)
+				{
+					int rideIdx = FindClosestAccessibleRide(   c, resp.RideServed, limitToStart);//up to 10k   Would need better algo
+					if(rideIdx!=0)
+					{
+						c.addRide(rideIdx);
+						resp.RideServed[rideIdx]= true;
+						finished = false;
+					}else
+					{
+						c.finished=true;
+					}
+				}
+				
+			}
 		}
 		
 		
@@ -288,12 +303,44 @@ public class AlgoInputToOutput implements  Runnable {
 		return resp;
 	}
 
-	int FindClosestAccessibleRide(Car c, boolean RideServed[], Problem pb)
+	int FindClosestAccessibleRide(Car c, boolean RideServed[], Problem pb, boolean limitToStart)
 	{
-		int lastRide = c.RidesServed.get(c.RidesServed.size()-1);
+		int lastRideIdx = c.RidesServed.get(c.RidesServed.size()-1);
+		Point pos ;
+		Ride lastRide = pb.Rides.get(lastRideIdx);
+
+		int bestRideIdx = 0;
+		// FIrst try to match start
+		for(Ride ri : pb.Rides )
+		{
+			if(Common.isStartRidable( lastRide, ri, c.lastRideTime ) )
+			{
+				if(bestRideIdx == 0 || pb.Rides.get(bestRideIdx).s > ri.s  )
+				{
+					bestRideIdx = ri.idx;
+				}
+			}
+		}
+		if(bestRideIdx != -1)
+		{
+			return bestRideIdx;
+		}
+		// Else try to match closest
+		if(!limitToStart)
+		{
+			for(Ride ri : pb.Rides )
+			{
+				if(Common.isRidable( lastRide, ri, c.lastRideTime ) )
+				{
+					if(bestRideIdx == 0 || pb.Rides.get(bestRideIdx).s > ri.s  )
+					{
+						bestRideIdx = ri.idx;
+					}
+				}
+			}
+		}
 		
-		// Point pos =
-		
+		return bestRideIdx;
 	}
 	
 	

@@ -48,10 +48,10 @@ public class Solution implements Serializable, Cloneable {
 		this.Cars = new ArrayList<Car>();
 		for(int i=0;i<pb.F;i++)
 		{
-			this.Cars.add(new Car(pb.N));
+			this.Cars.add();
 		}
-		this.RideServed = new boolean[pb.N];	
-		
+		this.RideServed = new boolean[pb.N+1];	
+		RideServed[0]=true;
 	}
 	
 	
