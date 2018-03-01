@@ -111,7 +111,7 @@ public class Solution implements Serializable, Cloneable {
 		}
 		c.lastRideTime = 0;
 		c.finished = false;
-		c.RidesServed = new ArrayList<Integer>();
+		c.RidesServed = new ArrayList<Integer>();c.RidesServed.add(0);
 	}
 	
 	
