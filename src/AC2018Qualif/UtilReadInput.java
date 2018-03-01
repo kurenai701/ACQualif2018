@@ -15,13 +15,12 @@ public class UtilReadInput {
 
 			writer.println("pb = new Problem();");
 			
-			myScanfLike(writer, "%s%d%d%d%d", "V,E,R,C,X", "Pb.");
+			myScanfLike(writer, "%d%d%d%d%d%d", "R,C,F,N,B,T", "pb.");
 			writer.println();
 			
-			forLoopBasicPrint(writer, 'i', "Pb.V");	
-			myScanfLike(writer, "%d%d%d", "LC1,LC2,LC3", "int ");	
+			forLoopBasicPrint(writer, 'i', "Pb.N");	
+			myScanfLike(writer, "%d%d%d%d%d%d", "a,b,x,y,s,f", "int ");	
 			closeForLoop(writer);
-
 			
 			forLoopBasicPrint(writer, 'i', "Pb.E");	
 			myScanfLike(writer, "%d%d%d", "E1,E2,E3", "int ");	
@@ -65,10 +64,10 @@ public class UtilReadInput {
 
 		switch (charPattern) {
 		case 'd':
-			writer.println(beforeVal + targetVal + " = ScIn.nextInt();");
+			writer.println(beforeVal + targetVal + " = scIn.nextInt();");
 			break;
 		case 's':
-			writer.println(beforeVal + targetVal + " = ScIn.next();");
+			writer.println(beforeVal + targetVal + " = scIn.next();");
 			break;
 		}
 
