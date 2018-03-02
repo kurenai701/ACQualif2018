@@ -245,7 +245,7 @@ public class AlgoInputToOutput implements  Runnable {
 			}
 		}
 		
-		int nRideToRemove = (int)(subProb.N*0.1);
+		int nRideToRemove = (int)(subProb.N*0.2);
 		if(rand.nextDouble()<0.2)
 		{
 			nRideToRemove=0;
@@ -363,8 +363,8 @@ public class AlgoInputToOutput implements  Runnable {
 		int lastRideIdx = c.RidesServed.get(c.RidesServed.size()-1);
 		Point pos ;
 		Ride lastRide = pb.Rides.get(lastRideIdx);
-		double pbkeep = 0.9;
-		int bestDist = Integer.MAX_VALUE;
+		double pbkeep = 1;
+		int bestTimeToRide = Integer.MAX_VALUE;
 		int bestRideIdx = 0;
 		if(ConsiderStart)
 		{
@@ -373,7 +373,7 @@ public class AlgoInputToOutput implements  Runnable {
 			{
 				if(!sol.RideServed[ri.id] &&  Common.IsStartRidable( lastRide, ri, c.lastRideTime ) )
 				{
-					if(bestRideIdx == 0 || (pb.Rides.get(bestRideIdx).f > ri.f  && rand.nextDouble()<pbkeep) )
+					if(bestRideIdx == 0 || (pb.Rides.get(bestRideIdx).s > ri.s  && rand.nextDouble()<pbkeep) )
 					{
 						bestRideIdx = ri.id;
 					}
@@ -391,10 +391,12 @@ public class AlgoInputToOutput implements  Runnable {
 			{
 				if(!sol.RideServed[ri.id] && Common.IsRidable( lastRide, ri, c.lastRideTime ) )
 				{
-					if(bestRideIdx == 0 || (pb.Rides.get(bestRideIdx).f > ri.f && rand.nextDouble()<pbkeep) )
+					int curTimeToRide = Math.max(c.lastRideTime+Common.Dist(lastRide,ri),ri.s);
+					if(bestRideIdx == 0 || 
+							(bestTimeToRide > curTimeToRide && rand.nextDouble()<pbkeep) )
 					{
 						bestRideIdx = ri.id;
-						bestDist = Common.Dist(ri,lastRide);
+						bestTimeToRide = curTimeToRide;
 					}
 				}
 			}

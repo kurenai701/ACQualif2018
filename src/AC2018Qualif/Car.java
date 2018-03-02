@@ -11,6 +11,9 @@ public class Car implements Serializable{
 	ArrayList<Integer> RidesServed;
 	int lastRideTime;
 	boolean finished;
+	Ride NextBestRide;
+	int NextBestRideStartTime;
+	
 	
 	
 	public Car(ArrayList ridesServed) {
@@ -25,6 +28,31 @@ public class Car implements Serializable{
 		RidesServed.add(0);
 		lastRideTime=0;
 		finished= false;
+	}
+	
+	void findBestRide(Problem pb,Solution sol)
+	{
+		int bestTimeToRide = Integer.MAX_VALUE;
+		int bestRideIdx = 0;
+		int lastRideIdx = this.RidesServed.get(this.RidesServed.size()-1);
+		Ride lastRide = pb.Rides.get(lastRideIdx);
+		for(Ride ri : pb.Rides )
+		{
+			if(!sol.RideServed[ri.id] && Common.IsRidable( lastRide, ri, this.lastRideTime ) )
+			{
+				int curTimeToRide = Math.max(this.lastRideTime+Common.Dist(lastRide,ri),ri.s);
+				if(bestRideIdx == 0 || 
+						(bestTimeToRide > curTimeToRide ) )//&& rand.nextDouble()<pbkeep
+				{
+					bestRideIdx = ri.id;
+					bestTimeToRide = curTimeToRide;
+				}
+			}
+		}
+		NextBestRide 			= pb.Rides.get(bestRideIdx);
+		NextBestRideStartTime 	= bestTimeToRide;
+		
+		
 	}
 	
 	void addRide(int rideIdx, Problem pb)

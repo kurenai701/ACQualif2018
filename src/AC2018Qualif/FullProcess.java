@@ -12,12 +12,12 @@ public class FullProcess {
 	 */
 	public static void main(String[] args) {
 
-		boolean RELOAD = true;
+		boolean RELOAD = false;
 		boolean ConsiderStart = false;
 //		Common.InputFileName = "a_example.in";//RELOAD = true;// set RELOAD to true to restart from saved state
 //		Common.InputFileName = "b_should_be_easy.in";//RELOAD = true;// set RELOAD to true to restart from saved state
 		Common.InputFileName = "c_no_hurry.in";//RELOAD = true;// set RELOAD to true to restart from saved state
-//		Common.InputFileName = "d_metropolis.in";ConsiderStart=true;//RELOAD = true;// set RELOAD to true to restart from saved state
+//		Common.InputFileName = "d_metropolis.in";//ConsiderStart=true;//RELOAD = true;// set RELOAD to true to restart from saved state
 //		Common.InputFileName = "e_high_bonus.in";ConsiderStart = true;//RELOAD = true;// set RELOAD to true to restart from saved state
 
 	
