@@ -2,6 +2,7 @@ package AC2018Qualif;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /*
  * This class stores a solution. It is serializable for storage to file.
@@ -115,7 +116,10 @@ public class Solution implements Serializable, Cloneable {
 		}
 		c.lastRideTime = 0;
 		c.finished = false;
-		c.RidesServed = new ArrayList<Integer>();c.RidesServed.add(0);
+		c.RidesServed = new LinkedList<Integer>();
+		c.RidesServed.add(0);
+		c.NextBestRide = null;
+		c.NextBestRideStartTime = Integer.MAX_VALUE;
 	}
 	
 	

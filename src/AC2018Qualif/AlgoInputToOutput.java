@@ -66,7 +66,7 @@ public class AlgoInputToOutput implements  Runnable {
 		
 		SubProblems.add(pb);// Currently, no divide and conquer// TODO : If creating subproblem, update this line
 
-		int NITSUB = 60000;// Number of iteration for each subproblem
+		int NITSUB = 6000000;// Number of iteration for each subproblem
 		
 		for( int nit = 0;nit<NIT;nit++)
 		{
@@ -79,7 +79,7 @@ public class AlgoInputToOutput implements  Runnable {
 			for(int subInd = 0; subInd<SubProblems.size();subInd++)
 			{		
 				Problem subProb = subProblem(pb);//, xxx parameters)
-				Solution SubSol = new Solution(subProb);
+				Solution SubSol = Sol;//new Solution(subProb);
 				double initScore = SubSol.GetScore();
 				BestSolutionSynchro BestSolSynchroSub = new BestSolutionSynchro(SubSol );
 				Sol.curScore = -1000;
@@ -230,23 +230,30 @@ public class AlgoInputToOutput implements  Runnable {
 
 		//Solution subSol = new Solution(subProb);
 		Sol.curScore = -100;
+	/*	for(int k =0;k<2;k++)
+		{
+			int idx1 = rand.nextInt(subProb.F);
+			Sol.removeCar(idx1);
+		}*/
+		
 		
 		// Remove a list of cars;
-		int nCareToRemove = 1;//(int)(subProb.F*0.1);
+		int nCareToRemove = 20000;//(int)(subProb.F*0.1);
 		boolean removedCar[] = new boolean[subProb.F];
 		while(nCareToRemove>0)
 		{
 			int idx = rand.nextInt(subProb.F);
-			if(!removedCar[idx])
-			{
-				nCareToRemove--;
-				removedCar[idx] = true;
-				Sol.removeCar(idx);
-			}
-		}
+			nCareToRemove--;
+			Sol.Cars.get(idx).OptimizeRide(subProb,Sol,rand);	
+		}//TODO : Ajouter croisement entre voitures ou optimisations croisées
+
+
+		
+		
+		/*
 		
 		int nRideToRemove = (int)(subProb.N*0.2);
-		if(rand.nextDouble()<0.2)
+		if(rand.nextDouble()<0.3)
 		{
 			nRideToRemove=0;
 		}
@@ -262,13 +269,15 @@ public class AlgoInputToOutput implements  Runnable {
 			Sol.RideServed[k] = true;
 		}
 		
-		Sol =  AlgoInit( subProb,  rand, Sol, ConsiderStart);
+		//Sol =  AlgoInit( subProb,  rand, Sol, ConsiderStart);
+		Sol =  AlgoAdvanced( subProb,  rand, Sol, ConsiderStart);
+		double newScore = Sol.GetScore();
 		for(int i =0;i<nRideToRemove;i++)
 		{
 			int k = listI[i];
 			Sol.RideServed[k] = rideCoveredSave[k];
 		}
-		
+		*/
 		
 		return Sol;
 	}
@@ -305,6 +314,8 @@ public class AlgoInputToOutput implements  Runnable {
 	{
 		Solution resp = new Solution(pb);
 		return AlgoInit( pb,  rand, resp, ConsiderStart);
+		
+		//return AlgoAdvanced( pb,  rand, resp, ConsiderStart);
 	}
 		
 		
@@ -404,6 +415,61 @@ public class AlgoInputToOutput implements  Runnable {
 		
 		return bestRideIdx;
 	}
+	
+	
+	
+	public Solution AlgoAdvanced(Problem pb, SplittableRandom rand,Solution resp, boolean ConsiderStart)
+	{
+		
+		
+		// try to allocate the ride with the first starting time accessible for all cars, then iterate
+		// For each case, the car has a score, covered rides and time.
+		boolean finished = false	;
+		
+		
+		while(!finished)
+		{ 
+
+			Car bestCAR = null;
+			int NextBestRideStartTime = Integer.MAX_VALUE;
+
+				for(Car c : resp.Cars)
+				{
+					
+					if(!c.finished)
+					{
+						if(c.NextBestRide== null || resp.RideServed[c.NextBestRide.id]==true )
+						{
+							c.findBestRide(pb, resp);
+						}
+						if(c.NextBestRide.id!=0)
+						{
+							if(c.NextBestRideStartTime<NextBestRideStartTime)
+							{
+								NextBestRideStartTime = c.NextBestRideStartTime;
+								bestCAR = c;
+							}
+						}else
+						{
+							c.finished = true;
+						}
+					}
+				}
+				if(bestCAR==null)
+				{
+					finished = true;
+				}else
+				{
+					bestCAR.addRide(bestCAR.NextBestRide.id, pb);
+					resp.RideServed[bestCAR.NextBestRide.id]= true;
+				}
+		}
+		
+		
+		
+		return resp;
+	}
+	
 	
 	
 }

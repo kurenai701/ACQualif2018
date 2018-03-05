@@ -2,13 +2,15 @@ package AC2018Qualif;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.SplittableRandom;
 
 public class Car implements Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2313261149009936617L;
-	ArrayList<Integer> RidesServed;
+	LinkedList<Integer> RidesServed;
 	int lastRideTime;
 	boolean finished;
 	Ride NextBestRide;
@@ -16,7 +18,7 @@ public class Car implements Serializable{
 	
 	
 	
-	public Car(ArrayList ridesServed) {
+	public Car(LinkedList ridesServed) {
 		super();
 		RidesServed = ridesServed;
 	}
@@ -24,7 +26,7 @@ public class Car implements Serializable{
 	
 	public Car( ) {
 		super();
-		RidesServed = new ArrayList<Integer>();
+		RidesServed = new LinkedList<Integer>();
 		RidesServed.add(0);
 		lastRideTime=0;
 		finished= false;
@@ -54,6 +56,75 @@ public class Car implements Serializable{
 		
 		
 	}
+	
+	@SuppressWarnings("unchecked")
+	void OptimizeRide(Problem pb, Solution sol,SplittableRandom rand)
+	{
+		double bestScore = this.score(pb);
+		LinkedList<Integer> BestRidesServed = (LinkedList<Integer>) RidesServed.clone();
+		int bestLastRideTime = lastRideTime;
+		boolean bestRideServedIdx[] = sol.RideServed.clone();
+		int Nit = 200;
+		double temp= 0;//10000;
+		for(int i =0;i<Nit;i++)
+		{
+			temp = temp*0.95;
+			TryRemoveAndInsert(pb,sol,rand);
+			if(this.score(pb)>bestScore)
+			{
+				bestScore = this.score(pb);
+				BestRidesServed = (LinkedList<Integer>) RidesServed.clone();
+				bestLastRideTime = lastRideTime;
+				bestRideServedIdx =  sol.RideServed.clone();
+			}else
+			{
+				//Restore
+				if((i==Nit-1 )  || 0.15>rand.nextDouble())
+				{
+					RidesServed = (LinkedList<Integer>) BestRidesServed.clone();
+					lastRideTime = bestLastRideTime;
+					 sol.RideServed = bestRideServedIdx.clone();
+				}
+			}
+		}
+		
+	}
+	
+	// Tries to remove 1 or more Ride from Car, then replace with other Rides.
+	void TryRemoveAndInsert(Problem pb, Solution sol, SplittableRandom rand)
+	{
+		int PosRemove = rand.nextInt(RidesServed.size());
+		if(PosRemove!=0)
+		{
+			Integer id = RidesServed.remove(PosRemove);
+			sol.RideServed[id] = false;
+		
+		// Add 1 or 2 rides
+		int NRideAdd= 0 + rand.nextInt(3);
+		for(int i =0;i<NRideAdd;i++)
+		{
+			int id_insert = 0;
+			int Ntest = 100;
+			while(id_insert==0 && 0<Ntest--)
+			{
+				int tmp= rand.nextInt(sol.RideServed.length); 
+				if(!sol.RideServed[tmp])
+				{
+					id_insert = tmp;
+				}
+			}
+			if(id_insert!=0)
+			{
+				RidesServed.add(PosRemove,id_insert);
+				sol.RideServed[id_insert] = true;
+			}
+		}
+		}
+		
+		
+	}
+	
+	
 	
 	void addRide(int rideIdx, Problem pb)
 	{
